@@ -1,0 +1,6 @@
+ENDPOINT NAME                       - METHOD TYPE   - PERMISSION              - REQUIRED PARAMETERS
+/                                   - GET           - NONE
+    /register                       - POST          - NONE                    - email, password
+    /login                          - POST          - NONE                    - email, password
+/user
+    /edit/{userID}                  - PUT           - USER                    - userID, username, telephone, profile picture?
