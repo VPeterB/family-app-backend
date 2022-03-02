@@ -5,20 +5,24 @@ ENDPOINT NAME                   - METHOD TYPE   - REQUIRED PARAMETERS
 /api/user			- GET		- userID
 	/edit                  	- PUT           - userID, username, telephone, profile picture, forename, surename, category	
 	/sendinvite		- POST		- userID, familyID, email
+	/delete			- DELTE		- userID
 /api/family			- GET		- familyID
 	/create			- POST          - userID, picture
 	/edit			- PUT 		- userID, familyID, picture
 	/delete			- DELTE		- userID, familyID
 	/adduser		- PUT		- userID, familyID, email
+	/removeuser		- PUT		- userID, familyID, email
 /api/shoppinglist		- GET		- shoppinglistID
 	/byfamily		- GET		- familyID
 	/create			- POST          - userID, familyID, name
 	/edit			- PUT		- userID, shoppinglistID, name
 	/delete			- DELTE		- userID, shoppinglistID
 	/adduser		- PUT		- userID, familyID, userID, email
+	/removeuser		- PUT		- userID, familyID, userID, email
 /api/shoppingitem		- GET		- shoppinglistID, shoppingitemID
 	/all			- GET		- shoppinglistID
 	/add			- POST		- userID, shoppinglistID, name
 	/delte			- DELETE 	- shoppinglistID, shoppingitemID
 	/done			- PUT		- userID, shoppinglistID, shoppingitemID
+	/undone			- PUT		- userID, shoppinglistID, shoppingitemID
 	
