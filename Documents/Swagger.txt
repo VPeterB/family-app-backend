@@ -1,0 +1,733 @@
+swagger: '2.0'
+info:
+  description: This is a familyapp API
+  version: 1.0.0
+  title: Family App API
+  # put the contact info for your development or API team
+  contact:
+    email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: login
+  description: Login operations.
+- name: register
+  description: Registry operations.
+- name: user
+  description: User operations.
+- name: family
+  description: Family operations.
+- name: shoppinglist
+  description: Shoppinglist operations.
+- name: shoppingitem
+  description: Shoppinglist item operations.
+
+paths:
+  /api/register:
+    post:
+      tags:
+      - register
+      summary: Register
+      operationId: reg
+      parameters:
+        - in: body
+          name: user
+          description: The user to register.
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              eamil:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Registered.
+        400:
+          description: Failed registration.
+  /api/login:
+    post:
+      tags:
+      - login
+      summary: Login user
+      operationId: login
+      parameters:
+        - in: body
+          name: user
+          description: The user to login.
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              eamil:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Ok.
+        400:
+          description: Failed login.
+  /api/user/{userID}:
+    get:
+      tags:
+      - user
+      summary: Get user
+      operationId: getUser
+      parameters:
+        - name: userID
+          in: path
+          description: userID
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/User'
+        404:
+          description: Not found.
+  /api/user/edit/{userID}:
+    put:
+      tags:
+        - user
+      summary: Edit the user
+      operationId: editUser
+      parameters:
+        - name: userID
+          in: path
+          description: userID
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: The edited user.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Edited
+        404:
+          description: Not found
+        405:
+          description: Invalid input
+  /api/user/sendinvite/{userID}:
+    post:
+      tags:
+        - user
+      summary: Invite a user into the family
+      operationId: inviteUser
+      parameters:
+        - name: userID
+          in: path
+          description: userID
+          required: true
+          type: string
+        - in: body
+          name: invite
+          description: The user's email and the familyID.
+          schema:
+            type: object
+            required:
+              - email
+              - familyID
+            properties:
+              email:
+                type: string
+              familyID:
+                type: string
+      responses:
+        200:
+          description: Invite sent
+        404:
+          description: Not found
+        405:
+          description: Invalid input
+  /api/user/delete/{userID}:
+    delete:
+      tags:
+        - user
+      summary: Delete the user
+      operationId: deleteUser
+      parameters:
+        - name: userID
+          in: path
+          description: userID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted
+        404:
+          description: Not found
+        405:
+          description: Invalid input
+  /api/family/{familyID}:
+    get:
+      tags:
+      - family
+      summary: Get family
+      operationId: getFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: familyID
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/Family'
+        404:
+          description: Not found. 
+  /api/family/create/{userID}:
+    post:
+      tags:
+      - family
+      summary: Create family
+      operationId: createFamily
+      parameters:
+        - name: userID
+          in: path
+          description: creator
+          required: true
+          type: string
+        - name: picture
+          in: body
+          description: familypicture
+          schema:
+            type: string
+            format: byte
+            example: valami.png
+      responses:
+        200:
+          description: Created.
+        404:
+          description: Fail.
+  /api/family/edit/{familyID}:
+    put:
+      tags:
+      - family
+      summary: Edit family
+      operationId: editFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: family's id to edit
+          required: true
+          type: string
+        - in: body
+          name: family
+          description: The edited family.
+          required: true
+          schema:
+            $ref: '#/definitions/Family'
+      responses:
+        200:
+          description: Edited.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/family/delete/{familyID}:
+    delete:
+      tags:
+      - family
+      summary: Delete family
+      operationId: deleteFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: family's id to edit
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted.
+        404:
+          description: Not found.
+  /api/family/adduser/{familyID}:
+    put:
+      tags:
+      - family
+      summary: Add user to the family
+      operationId: addUserToFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: family's id
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: The user to add to family.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Added.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/family/removeuser/{familyID}:
+    put:
+      tags:
+      - family
+      summary: Remove user from the family
+      operationId: removeUserFromFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: family's id
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: The user to remove from the family.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Removed.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/{shoppinglistID}:
+    get:
+      tags:
+      - shoppinglist
+      summary: Get shoppinglist by id
+      operationId: getShoppingList
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/ShoppingList'
+        404:
+          description: Not found.
+  /api/shoppinglist/byfamily/{familyID}:
+    get:
+      tags:
+      - shoppinglist
+      - family
+      summary: Get shoppinglist by family
+      operationId: getShoppingListbyFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: familyID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ShoppingList'
+        404:
+          description: Not found.
+  /api/shoppinglist/create/{userID}:
+    post:
+      tags:
+      - shoppinglist
+      summary: Create shoppinglist
+      operationId: createShoppingList
+      parameters:
+        - name: userID
+          in: path
+          description: creator
+          required: true
+          type: string
+        - name: shoppinglistcreate
+          in: body
+          description: familyID, name
+          schema:
+            type: object
+            properties:
+              familyID:
+                type: string
+              name:
+                type: string
+      responses:
+        200:
+          description: Created.
+        404:
+          description: Fail.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/edit/{shoppinglistID}:
+    post:
+      tags:
+      - shoppinglist
+      summary: Edit shoppinglist
+      operationId: editShoppingList
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: Editable shoppinglist1s ID
+          required: true
+          type: string
+        - name: shoppinglist
+          in: body
+          description: Edited ShoppingList
+          required: true
+          schema:
+            $ref: '#/definitions/ShoppingList'
+      responses:
+        200:
+          description: Edited.
+        404:
+          description: Fail.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/delete/{shoppinglistID}:
+    delete:
+      tags:
+      - shoppinglist
+      summary: Delete shoppinglist
+      operationId: deleteShoppingList
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: Delete shoppinglist's Id
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted.
+        404:
+          description: Fail.
+  /api/shoppinglist/adduser/{shoppinglistID}:
+    put:
+      tags:
+      - shoppinglist
+      summary: Add user to the shoppinglist
+      operationId: addUserToShoppingList
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglist's id
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: The user to add to shoppinglist.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Added.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/removeuser/{shoppinglistID}:
+    put:
+      tags:
+      - shoppinglist
+      summary: Remove user from the shoppinglist
+      operationId: removeUserFromShoppingList
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglist's id
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: The user to remove from the shoppinglist.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Removed.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/shoppingitem/{shoppingitemID}:
+    get:
+      tags:
+      - shoppingitem
+      summary: Get shoppingitem by id
+      operationId: getShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: shoppingitemID
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/ShoppingItem'
+        404:
+          description: Not found.
+  /api/shoppinglist/shoppingitem/all/{shoppinglistID}:
+    get:
+      tags:
+      - shoppingitem
+      - shoppinglist
+      summary: Get shoppingitem by shoppinglist
+      operationId: getAllShoppingItem
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ShoppingItem'
+        404:
+          description: Not found.
+  /api/shoppinglist/shoppingitem/add/{shoppinglistID}:
+    post:
+      tags:
+      - shoppingitem
+      summary: Add shoppingitem
+      operationId: addShoppingItem
+      parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
+        - name: shoppingitem
+          in: body
+          description: Addable Shoppingitem
+          required: true
+          schema:
+            $ref: '#/definitions/ShoppingItem'
+      responses:
+        200:
+          description: Added.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/shoppingitem/delete/{shoppingitemID}:
+    delete:
+      tags:
+      - shoppingitem
+      summary: Delete shoppingitem
+      operationId: deleteShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: ShoppingItemID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted.
+        404:
+          description: Not found.
+  /api/shoppinglist/shoppingitem/done/{shoppingitemID}:
+    put:
+      tags:
+      - shoppingitem
+      summary: Done shoppingitem
+      operationId: doneShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: ShoppingItemID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Done.
+        404:
+          description: Not found.
+  /api/shoppinglist/shoppingitem/undone/{shoppingitemID}:
+    put:
+      tags:
+      - shoppingitem
+      summary: Undone shoppingitem
+      operationId: undoneShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: ShoppingItemID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Undone.
+        404:
+          description: Not found.
+definitions:
+  ShoppingItem:
+    type: object
+    required:
+    - ID
+    - name
+    - shoppinglistID
+    properties:
+      ID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Apple
+      done:
+        type: boolean
+      shoppinglistID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      ShoppingList:
+        $ref: '#/definitions/ShoppingList'
+  ShoppingList:
+    type: object
+    required:
+    - ID
+    - name
+    - familyID
+    properties:
+      ID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Aldi
+      familyID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      Family:
+        $ref: '#/definitions/Family'
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ShoppingItem'
+  User:
+    type: object
+    required:
+    - ID
+    - email
+    - password
+    properties:
+      ID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      email:
+        type: string
+        example: valami@gmail.com
+      password:
+        type: string
+        example: 123456abc
+      phonenumber:
+        type: string
+        example: +36301112222
+      firstname:
+        type: string
+        example: Jozsi
+      lastname:
+        type: string
+        example: Vajas
+      username:
+        type: string
+        example: Jozsika
+      category:
+        type: string
+        example: gyerek
+      profilepicture:
+        type: string
+        format: byte
+        example: valami.jpg
+      familyID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      Family:
+        $ref: '#/definitions/Family'
+      invites:
+        type: array
+        items:
+          $ref: '#/definitions/Invite'
+      shoppinglists:
+        type: array
+        items:
+          $ref: '#/definitions/ShoppingList'
+  Family:
+    type: object
+    required:
+    - ID
+    properties:
+      ID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      picture:
+        type: string
+        format: byte
+        example: valami.jpg
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      shoppinglists:
+        type: array
+        items:
+          $ref: '#/definitions/ShoppingList'
+      invites:
+        type: array
+        items:
+          $ref: '#/definitions/Invite'
+  Invite:
+    type: object
+    required:
+    - ID
+    - userID
+    - familyID
+    properties:
+      ID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      userID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      User:
+        $ref: '#/definitions/User'
+      familyID:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      Family:
+        $ref: '#/definitions/Family'
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /familyapp/FamilyApp/1.0.0
+schemes:
+ - https

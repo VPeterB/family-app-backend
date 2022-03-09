@@ -19,10 +19,10 @@ ENDPOINT NAME                   - METHOD TYPE   - REQUIRED PARAMETERS
 	/delete			- DELTE		- userID, shoppinglistID
 	/adduser		- PUT		- userID, familyID, userID, email
 	/removeuser		- PUT		- userID, familyID, userID, email
-/api/shoppingitem		- GET		- shoppinglistID, shoppingitemID
-	/all			- GET		- shoppinglistID
-	/add			- POST		- userID, shoppinglistID, name
-	/delte			- DELETE 	- shoppinglistID, shoppingitemID
-	/done			- PUT		- userID, shoppinglistID, shoppingitemID
-	/undone			- PUT		- userID, shoppinglistID, shoppingitemID
+	/shoppingitem		- GET		- shoppinglistID, shoppingitemID
+		/all		- GET		- shoppinglistID
+		/add		- POST		- userID, shoppinglistID, name
+		/delte		- DELETE 	- shoppinglistID, shoppingitemID
+		/done		- PUT		- userID, shoppinglistID, shoppingitemID
+		/undone		- PUT		- userID, shoppinglistID, shoppingitemID
 	
