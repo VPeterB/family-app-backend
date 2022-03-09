@@ -4,4 +4,4 @@
 
 2. hét: A specifikáció adatmodell és architechtúra része javításra került Mátéval és a konzultáción megbeszéltek szerint. Elkészítettük a [végpontok tervét](https://github.com/VPeterB/family-app-backend/blob/master/Documents/Végpontok.txt). Ez alapján elkezdtem megtervezni az API-t Swaggerben.
 
-3. hét: Elkészítettem a Swagger API-t, ami [itt](https://github.com/VPeterB/family-app-backend/blob/master/Documents/Swagger.txt) érhető el txt formátumban. Generáltam belőle kotlin - server kódot. A MariaDB adatbázist is elkezdtem felkonfigurálni.
+3. hét: Elkészítettem a Swagger API-t, ami [itt](https://github.com/VPeterB/family-app-backend/blob/master/Documents/Swagger.txt) érhető el txt formátumban. Generáltam belőle kotlin - server kódot (Kotlin -Spring generátort nem találtam), itt elakadtam, mivel a választott technológia eredetileg Kotlin - SpringBoot és a generált kód nem SpringBoot. A MariaDB adatbázist is elkezdtem felkonfigurálni egyenlőre localhoston.
