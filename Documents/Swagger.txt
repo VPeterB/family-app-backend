@@ -94,7 +94,6 @@ paths:
           $ref: '#/definitions/User'
         404:
           description: Not found.
-  /api/user/edit/{userID}:
     put:
       tags:
         - user
@@ -118,8 +117,26 @@ paths:
           description: Not found
         405:
           description: Invalid input
-  /api/user/sendinvite/{userID}:
-    post:
+    delete:
+      tags:
+        - user
+      summary: Delete the user
+      operationId: deleteUser
+      parameters:
+        - name: userID
+          in: path
+          description: userID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted
+        404:
+          description: Not found
+        405:
+          description: Invalid input
+  /api/user/{userID}/sendinvite:
+    put:
       tags:
         - user
       summary: Invite a user into the family
@@ -150,25 +167,6 @@ paths:
           description: Not found
         405:
           description: Invalid input
-  /api/user/delete/{userID}:
-    delete:
-      tags:
-        - user
-      summary: Delete the user
-      operationId: deleteUser
-      parameters:
-        - name: userID
-          in: path
-          description: userID
-          required: true
-          type: string
-      responses:
-        200:
-          description: Deleted
-        404:
-          description: Not found
-        405:
-          description: Invalid input
   /api/family/{familyID}:
     get:
       tags:
@@ -186,31 +184,6 @@ paths:
           $ref: '#/definitions/Family'
         404:
           description: Not found. 
-  /api/family/create/{userID}:
-    post:
-      tags:
-      - family
-      summary: Create family
-      operationId: createFamily
-      parameters:
-        - name: userID
-          in: path
-          description: creator
-          required: true
-          type: string
-        - name: picture
-          in: body
-          description: familypicture
-          schema:
-            type: string
-            format: byte
-            example: valami.png
-      responses:
-        200:
-          description: Created.
-        404:
-          description: Fail.
-  /api/family/edit/{familyID}:
     put:
       tags:
       - family
@@ -235,7 +208,6 @@ paths:
           description: Not found.
         405:
           description: Invalid input.
-  /api/family/delete/{familyID}:
     delete:
       tags:
       - family
@@ -244,7 +216,7 @@ paths:
       parameters:
         - name: familyID
           in: path
-          description: family's id to edit
+          description: family's id to delete
           required: true
           type: string
       responses:
@@ -252,7 +224,31 @@ paths:
           description: Deleted.
         404:
           description: Not found.
-  /api/family/adduser/{familyID}:
+  /api/family/create/{userID}:
+    post:
+      tags:
+      - family
+      summary: Create family
+      operationId: createFamily
+      parameters:
+        - name: userID
+          in: path
+          description: creator
+          required: true
+          type: string
+        - name: picture
+          in: body
+          description: familypicture
+          schema:
+            type: string
+            format: byte
+            example: valami.png
+      responses:
+        200:
+          description: Created.
+        404:
+          description: Fail.
+  /api/family/{familyID}/adduser:
     put:
       tags:
       - family
@@ -265,11 +261,11 @@ paths:
           required: true
           type: string
         - in: body
-          name: user
-          description: The user to add to family.
+          name: userID
+          description: The user's ID to add to family.
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: string
       responses:
         200:
           description: Added.
@@ -277,7 +273,7 @@ paths:
           description: Not found.
         405:
           description: Invalid input.
-  /api/family/removeuser/{familyID}:
+  /api/family/{familyID}/removeuser:
     put:
       tags:
       - family
@@ -291,10 +287,10 @@ paths:
           type: string
         - in: body
           name: user
-          description: The user to remove from the family.
+          description: The user's ID to remove from the family.
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: string
       responses:
         200:
           description: Removed.
@@ -319,59 +315,7 @@ paths:
           $ref: '#/definitions/ShoppingList'
         404:
           description: Not found.
-  /api/shoppinglist/byfamily/{familyID}:
-    get:
-      tags:
-      - shoppinglist
-      - family
-      summary: Get shoppinglist by family
-      operationId: getShoppingListbyFamily
-      parameters:
-        - name: familyID
-          in: path
-          description: familyID
-          required: true
-          type: string
-      responses:
-        200:
-          description: Ok
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ShoppingList'
-        404:
-          description: Not found.
-  /api/shoppinglist/create/{userID}:
-    post:
-      tags:
-      - shoppinglist
-      summary: Create shoppinglist
-      operationId: createShoppingList
-      parameters:
-        - name: userID
-          in: path
-          description: creator
-          required: true
-          type: string
-        - name: shoppinglistcreate
-          in: body
-          description: familyID, name
-          schema:
-            type: object
-            properties:
-              familyID:
-                type: string
-              name:
-                type: string
-      responses:
-        200:
-          description: Created.
-        404:
-          description: Fail.
-        405:
-          description: Invalid input.
-  /api/shoppinglist/edit/{shoppinglistID}:
-    post:
+    put:
       tags:
       - shoppinglist
       summary: Edit shoppinglist
@@ -395,7 +339,6 @@ paths:
           description: Fail.
         405:
           description: Invalid input.
-  /api/shoppinglist/delete/{shoppinglistID}:
     delete:
       tags:
       - shoppinglist
@@ -412,7 +355,58 @@ paths:
           description: Deleted.
         404:
           description: Fail.
-  /api/shoppinglist/adduser/{shoppinglistID}:
+  /api/shoppinglist/byfamily/{familyID}:
+    get:
+      tags:
+      - shoppinglist
+      summary: Get shoppinglists by family
+      operationId: getShoppingListbyFamily
+      parameters:
+        - name: familyID
+          in: path
+          description: familyID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Ok + ShoppingListIds
+          schema:
+            type: array
+            items:
+              type: string
+        404:
+          description: Not found.
+  /api/shoppinglist/create/{userID}:
+    post:
+      tags:
+      - shoppinglist
+      summary: Create shoppinglist
+      operationId: createShoppingList
+      parameters:
+        - name: userID
+          in: path
+          description: creator
+          required: true
+          type: string
+        - name: shoppinglistcreate
+          in: body
+          description: familyID, name
+          required: true
+          schema:
+            type: object
+            properties:
+              familyID:
+                type: string
+              name:
+                type: string
+      responses:
+        200:
+          description: Created.
+        404:
+          description: Fail.
+        405:
+          description: Invalid input.
+  /api/shoppinglist/{shoppinglistID}/adduser:
     put:
       tags:
       - shoppinglist
@@ -425,11 +419,11 @@ paths:
           required: true
           type: string
         - in: body
-          name: user
-          description: The user to add to shoppinglist.
+          name: userID
+          description: The user's id to add to shoppinglist.
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: string
       responses:
         200:
           description: Added.
@@ -437,7 +431,7 @@ paths:
           description: Not found.
         405:
           description: Invalid input.
-  /api/shoppinglist/removeuser/{shoppinglistID}:
+  /api/shoppinglist/{shoppinglistID}/removeuser:
     put:
       tags:
       - shoppinglist
@@ -450,11 +444,11 @@ paths:
           required: true
           type: string
         - in: body
-          name: user
-          description: The user to remove from the shoppinglist.
+          name: userID
+          description: The user's id to remove from the shoppinglist.
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: string
       responses:
         200:
           description: Removed.
@@ -462,7 +456,7 @@ paths:
           description: Not found.
         405:
           description: Invalid input.
-  /api/shoppinglist/shoppingitem/{shoppingitemID}:
+  /api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}:
     get:
       tags:
       - shoppingitem
@@ -474,17 +468,71 @@ paths:
           description: shoppingitemID
           required: true
           type: string
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
       responses:
         200:
           $ref: '#/definitions/ShoppingItem'
         404:
           description: Not found.
-  /api/shoppinglist/shoppingitem/all/{shoppinglistID}:
+    put:
+      tags:
+      - shoppingitem
+      summary: Edit shoppingitem
+      operationId: editShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: shoppingitemID
+          required: true
+          type: string
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
+        - name: shoppingitem
+          in: body
+          description: Edited ShoppingItem
+          required: true
+          schema:
+            $ref: '#/definitions/ShoppingItem'
+      responses:
+        200:
+          description: Edited.
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
+    delete:
+      tags:
+      - shoppingitem
+      summary: Delete shoppingitem
+      operationId: deleteShoppingItem
+      parameters:
+        - name: shoppingitemID
+          in: path
+          description: ShoppingItemID
+          required: true
+          type: string
+        - name: shoppinglistID
+          in: path
+          description: ShoppingListID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Deleted.
+        404:
+          description: Not found.
+  /api/shoppinglist/{shoppinglistID}/shoppingitem/all:
     get:
       tags:
       - shoppingitem
-      - shoppinglist
-      summary: Get shoppingitem by shoppinglist
+      summary: Get all shoppingitem from shoppinglist
       operationId: getAllShoppingItem
       parameters:
         - name: shoppinglistID
@@ -494,14 +542,14 @@ paths:
           type: string
       responses:
         200:
-          description: Ok
+          description: Ok + shoppingitemIDs
           schema:
             type: array
             items:
-              $ref: '#/definitions/ShoppingItem'
+              type: string
         404:
           description: Not found.
-  /api/shoppinglist/shoppingitem/add/{shoppinglistID}:
+  /api/shoppinglist/{shoppinglistID}/shoppingitem/add:
     post:
       tags:
       - shoppingitem
@@ -526,30 +574,18 @@ paths:
           description: Not found.
         405:
           description: Invalid input.
-  /api/shoppinglist/shoppingitem/delete/{shoppingitemID}:
-    delete:
-      tags:
-      - shoppingitem
-      summary: Delete shoppingitem
-      operationId: deleteShoppingItem
-      parameters:
-        - name: shoppingitemID
-          in: path
-          description: ShoppingItemID
-          required: true
-          type: string
-      responses:
-        200:
-          description: Deleted.
-        404:
-          description: Not found.
-  /api/shoppinglist/shoppingitem/done/{shoppingitemID}:
+  /api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}/done:
     put:
       tags:
       - shoppingitem
       summary: Done shoppingitem
       operationId: doneShoppingItem
       parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
         - name: shoppingitemID
           in: path
           description: ShoppingItemID
@@ -560,13 +596,18 @@ paths:
           description: Done.
         404:
           description: Not found.
-  /api/shoppinglist/shoppingitem/undone/{shoppingitemID}:
+  /api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}/undone:
     put:
       tags:
       - shoppingitem
       summary: Undone shoppingitem
       operationId: undoneShoppingItem
       parameters:
+        - name: shoppinglistID
+          in: path
+          description: shoppinglistID
+          required: true
+          type: string
         - name: shoppingitemID
           in: path
           description: ShoppingItemID
