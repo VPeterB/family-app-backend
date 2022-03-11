@@ -369,11 +369,14 @@ paths:
           type: string
       responses:
         200:
-          description: Ok + ShoppingListIds
+          description: Ok
           schema:
             type: array
             items:
-              type: string
+              type: object
+              properties:
+                id:
+                  type: string
         404:
           description: Not found.
   /api/shoppinglist/create/{userID}:
@@ -542,11 +545,14 @@ paths:
           type: string
       responses:
         200:
-          description: Ok + shoppingitemIDs
+          description: Ok
           schema:
             type: array
             items:
-              type: string
+              type: object
+              properties:
+                id:
+                  type: string
         404:
           description: Not found.
   /api/shoppinglist/{shoppinglistID}/shoppingitem/add:
@@ -563,7 +569,7 @@ paths:
           type: string
         - name: shoppingitem
           in: body
-          description: Addable Shoppingitem
+          description: Shoppingitem to add
           required: true
           schema:
             $ref: '#/definitions/ShoppingItem'
@@ -639,8 +645,6 @@ definitions:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      ShoppingList:
-        $ref: '#/definitions/ShoppingList'
   ShoppingList:
     type: object
     required:
@@ -659,16 +663,20 @@ definitions:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      Family:
-        $ref: '#/definitions/Family'
-      users:
+      userIDs:
         type: array
         items:
-          $ref: '#/definitions/User'
-      items:
+          type: object
+          properties:
+            id:
+              type: string
+      itemIDs:
         type: array
         items:
-          $ref: '#/definitions/ShoppingItem'
+          type: object
+          properties:
+            id:
+              type: string
   User:
     type: object
     required:
@@ -709,16 +717,20 @@ definitions:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      Family:
-        $ref: '#/definitions/Family'
-      invites:
+      inviteIDs:
         type: array
         items:
-          $ref: '#/definitions/Invite'
-      shoppinglists:
+          type: object
+          properties:
+            id:
+              type: string
+      shoppinglistIDs:
         type: array
         items:
-          $ref: '#/definitions/ShoppingList'
+          type: object
+          properties:
+            id:
+              type: string
   Family:
     type: object
     required:
@@ -732,18 +744,27 @@ definitions:
         type: string
         format: byte
         example: valami.jpg
-      users:
+      userIDs:
         type: array
         items:
-          $ref: '#/definitions/User'
-      shoppinglists:
+          type: object
+          properties:
+            id:
+              type: string
+      shoppinglistIDs:
         type: array
         items:
-          $ref: '#/definitions/ShoppingList'
-      invites:
+          type: object
+          properties:
+            id:
+              type: string
+      inviteIDs:
         type: array
         items:
-          $ref: '#/definitions/Invite'
+          type: object
+          properties:
+            id:
+              type: string
   Invite:
     type: object
     required:
@@ -759,14 +780,10 @@ definitions:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      User:
-        $ref: '#/definitions/User'
       familyID:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      Family:
-        $ref: '#/definitions/Family'
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /familyapp/FamilyApp/1.0.0
