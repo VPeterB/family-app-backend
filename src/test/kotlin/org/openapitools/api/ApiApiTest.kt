@@ -1,14 +1,14 @@
-package org.openapitools.api
+package hu.bme.aut.familyappbackend.api
 
-import org.openapitools.model.Family
-import org.openapitools.model.InlineObject
-import org.openapitools.model.InlineObject1
-import org.openapitools.model.InlineObject2
-import org.openapitools.model.InlineObject3
-import org.openapitools.model.InlineResponse200
-import org.openapitools.model.ShoppingItem
-import org.openapitools.model.ShoppingList
-import org.openapitools.model.User
+import hu.bme.aut.familyappbackend.model.Family
+import hu.bme.aut.familyappbackend.model.InlineObject
+import hu.bme.aut.familyappbackend.model.InlineObject1
+import hu.bme.aut.familyappbackend.model.InlineObject2
+import hu.bme.aut.familyappbackend.model.InlineObject3
+import hu.bme.aut.familyappbackend.model.InlineResponse200
+import hu.bme.aut.familyappbackend.model.ShoppingItem
+import hu.bme.aut.familyappbackend.model.ShoppingList
+import hu.bme.aut.familyappbackend.model.User
 import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
 

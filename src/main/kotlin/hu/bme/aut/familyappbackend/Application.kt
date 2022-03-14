@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = ["org.openapitools", "org.openapitools.api", "org.openapitools.model"])
+@ComponentScan(basePackages = ["hu.bme.aut.familyappbackend", "hu.bme.aut.familyappbackend.api", "hu.bme.aut.familyappbackend.model"])
 class Application
 
 fun main(args: Array<String>) {
