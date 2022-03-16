@@ -19,11 +19,14 @@ import javax.validation.Valid
  */
 data class Invite(
 
-    @field:JsonProperty("ID", required = true) val ID: java.util.UUID,
+    @field:JsonProperty("ID", required = true)
+    val ID: java.util.UUID,
 
-    @field:JsonProperty("userID", required = true) val userID: java.util.UUID,
+    @field:JsonProperty("userID", required = true)
+    val userID: java.util.UUID,
 
-    @field:JsonProperty("familyID", required = true) val familyID: java.util.UUID
+    @field:JsonProperty("familyID", required = true)
+    val familyID: java.util.UUID
 ) {
 
 }

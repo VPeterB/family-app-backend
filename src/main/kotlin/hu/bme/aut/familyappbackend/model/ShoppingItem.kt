@@ -20,13 +20,17 @@ import javax.validation.Valid
  */
 data class ShoppingItem(
 
-    @field:JsonProperty("ID", required = true) val ID: java.util.UUID,
+    @field:JsonProperty("ID", required = true)
+    val ID: java.util.UUID,
 
-    @field:JsonProperty("name", required = true) val name: kotlin.String,
+    @field:JsonProperty("name", required = true)
+    val name: kotlin.String,
 
-    @field:JsonProperty("shoppinglistID", required = true) val shoppinglistID: java.util.UUID,
+    @field:JsonProperty("shoppinglistID", required = true)
+    val shoppinglistID: java.util.UUID,
 
-    @field:JsonProperty("done") val done: kotlin.Boolean? = null
+    @field:JsonProperty("done")
+    val done: kotlin.Boolean? = null
 ) {
 
 }

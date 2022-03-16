@@ -18,9 +18,11 @@ import javax.validation.Valid
  */
 data class InlineObject1(
 
-    @field:JsonProperty("password", required = true) val password: kotlin.String,
+    @field:JsonProperty("password", required = true)
+    val password: kotlin.String,
 
-    @field:JsonProperty("eamil") val eamil: kotlin.String? = null
+    @field:JsonProperty("eamil")
+    val eamil: kotlin.String? = null
 ) {
 
 }

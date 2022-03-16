@@ -22,17 +22,22 @@ import javax.validation.Valid
  */
 data class ShoppingList(
 
-    @field:JsonProperty("ID", required = true) val ID: java.util.UUID,
+    @field:JsonProperty("ID", required = true)
+    val ID: java.util.UUID,
 
-    @field:JsonProperty("name", required = true) val name: kotlin.String,
+    @field:JsonProperty("name", required = true)
+    val name: kotlin.String,
 
-    @field:JsonProperty("familyID", required = true) val familyID: java.util.UUID,
+    @field:JsonProperty("familyID", required = true)
+    val familyID: java.util.UUID,
 
     @field:Valid
-    @field:JsonProperty("userIDs") val userIDs: kotlin.collections.List<InlineResponse200>? = null,
+    @field:JsonProperty("userIDs")
+    val userIDs: kotlin.collections.List<InlineResponse200>? = null,
 
     @field:Valid
-    @field:JsonProperty("itemIDs") val itemIDs: kotlin.collections.List<InlineResponse200>? = null
+    @field:JsonProperty("itemIDs")
+    val itemIDs: kotlin.collections.List<InlineResponse200>? = null
 ) {
 
 }

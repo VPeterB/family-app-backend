@@ -35,123 +35,114 @@ import kotlin.collections.Map
 @RequestMapping("\${api.base-path:/familyapp/FamilyApp/1.0.0}")
 class ApiApiController() {
 
-
     @RequestMapping(
         method = [RequestMethod.POST],
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/add"]
     )
-    fun addShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @Valid @RequestBody shoppingitem: ShoppingItem
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun addShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String, @Valid @RequestBody shoppingitem: ShoppingItem):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.PUT],
         value = ["/api/family/{familyID}/adduser"]
     )
-    fun addUserToFamily( @PathVariable("familyID") familyID: kotlin.String
-, @Valid @RequestBody userID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun addUserToFamily( @PathVariable("familyID") familyID: kotlin.String, @Valid @RequestBody userID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.PUT],
         value = ["/api/shoppinglist/{shoppinglistID}/adduser"]
     )
-    fun addUserToShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @Valid @RequestBody userID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun addUserToShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String, @Valid @RequestBody userID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.POST],
         value = ["/api/family/create/{userID}"]
     )
-    fun createFamily( @PathVariable("userID") userID: kotlin.String
-, @Valid @RequestBody(required = false) picture: kotlin.ByteArray?
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun createFamily( @PathVariable("userID") userID: kotlin.String, @Valid @RequestBody(required = false) picture: kotlin.ByteArray?):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.POST],
         value = ["/api/shoppinglist/create/{userID}"]
     )
-    fun createShoppingList( @PathVariable("userID") userID: kotlin.String
-, @Valid @RequestBody shoppinglistcreate: InlineObject3
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun createShoppingList( @PathVariable("userID") userID: kotlin.String, @Valid @RequestBody shoppinglistcreate: InlineObject3):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.DELETE],
         value = ["/api/family/{familyID}"]
     )
-    fun deleteFamily( @PathVariable("familyID") familyID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun deleteFamily( @PathVariable("familyID") familyID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.DELETE],
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}"]
     )
-    fun deleteShoppingItem( @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
-, @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun deleteShoppingItem( @PathVariable("shoppingitemID") shoppingitemID: kotlin.String, @PathVariable("shoppinglistID") shoppinglistID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.DELETE],
         value = ["/api/shoppinglist/{shoppinglistID}"]
     )
-    fun deleteShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun deleteShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.DELETE],
         value = ["/api/user/{userID}"]
     )
-    fun deleteUser( @PathVariable("userID") userID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun deleteUser( @PathVariable("userID") userID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.PUT],
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}/done"]
     )
-    fun doneShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun doneShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String, @PathVariable("shoppingitemID") shoppingitemID: kotlin.String):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
         method = [RequestMethod.PUT],
         value = ["/api/family/{familyID}"]
     )
-    fun editFamily( @PathVariable("familyID") familyID: kotlin.String
-, @Valid @RequestBody family: Family
-): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
+    fun editFamily( @PathVariable("familyID") familyID: kotlin.String, @Valid @RequestBody family: Family):
+            ResponseEntity<Unit> {
+                return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+            }
 
 
     @RequestMapping(
@@ -159,9 +150,9 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}"]
     )
     fun editShoppingItem( @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
-, @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @Valid @RequestBody shoppingitem: ShoppingItem
-): ResponseEntity<Unit> {
+    , @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
+    , @Valid @RequestBody shoppingitem: ShoppingItem
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -171,8 +162,8 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}"]
     )
     fun editShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @Valid @RequestBody shoppinglist: ShoppingList
-): ResponseEntity<Unit> {
+    , @Valid @RequestBody shoppinglist: ShoppingList
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -182,8 +173,8 @@ class ApiApiController() {
         value = ["/api/user/{userID}"]
     )
     fun editUser( @PathVariable("userID") userID: kotlin.String
-, @Valid @RequestBody(required = false) user: User?
-): ResponseEntity<Unit> {
+    , @Valid @RequestBody(required = false) user: User?
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -194,7 +185,7 @@ class ApiApiController() {
         produces = ["*/*"]
     )
     fun getAllShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-): ResponseEntity<List<InlineResponse200>> {
+    ): ResponseEntity<List<InlineResponse200>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -204,7 +195,7 @@ class ApiApiController() {
         value = ["/api/family/{familyID}"]
     )
     fun getFamily( @PathVariable("familyID") familyID: kotlin.String
-): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -214,8 +205,8 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}"]
     )
     fun getShoppingItem( @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
-, @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-): ResponseEntity<Unit> {
+    , @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -225,7 +216,7 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}"]
     )
     fun getShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -236,7 +227,7 @@ class ApiApiController() {
         produces = ["*/*"]
     )
     fun getShoppingListbyFamily( @PathVariable("familyID") familyID: kotlin.String
-): ResponseEntity<List<InlineResponse200>> {
+    ): ResponseEntity<List<InlineResponse200>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -246,7 +237,7 @@ class ApiApiController() {
         value = ["/api/user/{userID}"]
     )
     fun getUser( @PathVariable("userID") userID: kotlin.String
-): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -256,8 +247,8 @@ class ApiApiController() {
         value = ["/api/user/{userID}/sendinvite"]
     )
     fun inviteUser( @PathVariable("userID") userID: kotlin.String
-, @Valid @RequestBody(required = false) invite: InlineObject2?
-): ResponseEntity<Unit> {
+    , @Valid @RequestBody(required = false) invite: InlineObject2?
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -267,7 +258,7 @@ class ApiApiController() {
         value = ["/api/login"]
     )
     fun login( @Valid @RequestBody(required = false) user: InlineObject1?
-): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -277,7 +268,7 @@ class ApiApiController() {
         value = ["/api/register"]
     )
     fun reg( @Valid @RequestBody(required = false) user: InlineObject?
-): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -287,8 +278,8 @@ class ApiApiController() {
         value = ["/api/family/{familyID}/removeuser"]
     )
     fun removeUserFromFamily( @PathVariable("familyID") familyID: kotlin.String
-, @Valid @RequestBody user: kotlin.String
-): ResponseEntity<Unit> {
+    , @Valid @RequestBody user: kotlin.String
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -298,8 +289,8 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}/removeuser"]
     )
     fun removeUserFromShoppingList( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @Valid @RequestBody userID: kotlin.String
-): ResponseEntity<Unit> {
+    , @Valid @RequestBody userID: kotlin.String
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
@@ -309,8 +300,8 @@ class ApiApiController() {
         value = ["/api/shoppinglist/{shoppinglistID}/shoppingitem/{shoppingitemID}/undone"]
     )
     fun undoneShoppingItem( @PathVariable("shoppinglistID") shoppinglistID: kotlin.String
-, @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
-): ResponseEntity<Unit> {
+    , @PathVariable("shoppingitemID") shoppingitemID: kotlin.String
+    ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

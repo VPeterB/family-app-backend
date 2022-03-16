@@ -23,17 +23,21 @@ import javax.validation.Valid
 data class Family(
 
     @field:JsonProperty("ID", required = true) val ID: java.util.UUID,
-    @get:Pattern(regexp="^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")
-    @field:JsonProperty("picture") val picture: kotlin.ByteArray? = null,
+    //@get:Pattern(regexp="^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")
+    @field:JsonProperty("picture")
+    val picture: kotlin.ByteArray? = null,
 
     @field:Valid
-    @field:JsonProperty("userIDs") val userIDs: kotlin.collections.List<InlineResponse200>? = null,
+    @field:JsonProperty("userIDs")
+    val userIDs: kotlin.collections.List<InlineResponse200>? = null,
 
     @field:Valid
-    @field:JsonProperty("shoppinglistIDs") val shoppinglistIDs: kotlin.collections.List<InlineResponse200>? = null,
+    @field:JsonProperty("shoppinglistIDs")
+    val shoppinglistIDs: kotlin.collections.List<InlineResponse200>? = null,
 
     @field:Valid
-    @field:JsonProperty("inviteIDs") val inviteIDs: kotlin.collections.List<InlineResponse200>? = null
+    @field:JsonProperty("inviteIDs")
+    val inviteIDs: kotlin.collections.List<InlineResponse200>? = null
 ) {
 
 }

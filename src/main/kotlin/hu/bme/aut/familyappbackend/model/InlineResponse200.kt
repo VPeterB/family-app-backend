@@ -17,7 +17,8 @@ import javax.validation.Valid
  */
 data class InlineResponse200(
 
-    @field:JsonProperty("id") val id: kotlin.String? = null
+    @field:JsonProperty("id")
+    val id: kotlin.String? = null
 ) {
 
 }
