@@ -30,7 +30,7 @@ plugins {
 }
 
 dependencies {
-    val kotlinxCoroutinesVersion="1.2.0"
+    val kotlinxCoroutinesVersion = "1.2.0"
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("org.springframework.boot:spring-boot-starter-web")

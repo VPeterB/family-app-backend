@@ -12,9 +12,9 @@ import javax.validation.constraints.Size
 import javax.validation.Valid
 
 /**
- * 
- * @param password 
- * @param eamil 
+ *
+ * @param password
+ * @param eamil
  */
 data class InlineObject(
 

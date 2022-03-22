@@ -135,18 +135,13 @@ paths:
           description: Not found
         405:
           description: Invalid input
-  /api/user/{userID}/sendinvite:
+  /api/user/sendinvite:
     put:
       tags:
         - user
       summary: Invite a user into the family
       operationId: inviteUser
       parameters:
-        - name: userID
-          in: path
-          description: userID
-          required: true
-          type: string
         - in: body
           name: invite
           description: The user's email and the familyID.
@@ -224,18 +219,13 @@ paths:
           description: Deleted.
         404:
           description: Not found.
-  /api/family/create/{userID}:
+  /api/family/create:
     post:
       tags:
       - family
       summary: Create family
       operationId: createFamily
       parameters:
-        - name: userID
-          in: path
-          description: creator
-          required: true
-          type: string
         - name: picture
           in: body
           description: familypicture
@@ -379,18 +369,13 @@ paths:
                   type: string
         404:
           description: Not found.
-  /api/shoppinglist/create/{userID}:
+  /api/shoppinglist/create:
     post:
       tags:
       - shoppinglist
       summary: Create shoppinglist
       operationId: createShoppingList
       parameters:
-        - name: userID
-          in: path
-          description: creator
-          required: true
-          type: string
         - name: shoppinglistcreate
           in: body
           description: familyID, name

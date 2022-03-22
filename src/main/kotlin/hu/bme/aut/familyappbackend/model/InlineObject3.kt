@@ -12,9 +12,9 @@ import javax.validation.constraints.Size
 import javax.validation.Valid
 
 /**
- * 
- * @param familyID 
- * @param name 
+ *
+ * @param familyID
+ * @param name
  */
 data class InlineObject3(
 

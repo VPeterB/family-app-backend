@@ -12,8 +12,8 @@ import javax.validation.constraints.Size
 import javax.validation.Valid
 
 /**
- * 
- * @param id 
+ *
+ * @param id
  */
 data class InlineResponse200(
 

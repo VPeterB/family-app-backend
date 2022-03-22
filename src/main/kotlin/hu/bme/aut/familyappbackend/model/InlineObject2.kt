@@ -12,9 +12,9 @@ import javax.validation.constraints.Size
 import javax.validation.Valid
 
 /**
- * 
- * @param email 
- * @param familyID 
+ *
+ * @param email
+ * @param familyID
  */
 data class InlineObject2(
 

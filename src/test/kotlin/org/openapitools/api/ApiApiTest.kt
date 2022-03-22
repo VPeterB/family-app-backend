@@ -1,5 +1,6 @@
 package hu.bme.aut.familyappbackend.api
 
+import hu.bme.aut.familyappbackend.controller.*
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.InlineObject
 import hu.bme.aut.familyappbackend.model.InlineObject1
@@ -14,7 +15,11 @@ import org.springframework.http.ResponseEntity
 
 class ApiApiTest {
 
-    private val api: ApiApiController = ApiApiController()
+    private val siapi: ShoppingItemController = ShoppingItemController()
+    private val fapi: FamilyController = FamilyController()
+    private val iapi: InviteController = InviteController()
+    private val slapi: ShoppingListController = ShoppingListController()
+    private val uapi: UserController = UserController()
 
     /**
      * To test ApiApiController.addShoppingItem
@@ -24,9 +29,9 @@ class ApiApiTest {
      */
     @Test
     fun addShoppingItemTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val shoppingitem:ShoppingItem = TODO()
-        val response: ResponseEntity<Unit> = api.addShoppingItem(shoppinglistID, shoppingitem)
+        val shoppinglistID: kotlin.String = TODO()
+        val shoppingitem: ShoppingItem = TODO()
+        val response: ResponseEntity<Unit> = siapi.addShoppingItem(shoppinglistID, shoppingitem)
 
         // TODO: test validations
     }
@@ -39,9 +44,9 @@ class ApiApiTest {
      */
     @Test
     fun addUserToFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val userID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.addUserToFamily(familyID, userID)
+        val familyID: kotlin.String = TODO()
+        val userID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = fapi.addUserToFamily(familyID, userID)
 
         // TODO: test validations
     }
@@ -54,9 +59,9 @@ class ApiApiTest {
      */
     @Test
     fun addUserToShoppingListTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val userID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.addUserToShoppingList(shoppinglistID, userID)
+        val shoppinglistID: kotlin.String = TODO()
+        val userID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = slapi.addUserToShoppingList(shoppinglistID, userID)
 
         // TODO: test validations
     }
@@ -69,9 +74,9 @@ class ApiApiTest {
      */
     @Test
     fun createFamilyTest() {
-        val userID:kotlin.String = TODO()
-        val picture:kotlin.ByteArray? = TODO()
-        val response: ResponseEntity<Unit> = api.createFamily(userID, picture)
+        val userID: kotlin.String = TODO()
+        val picture: kotlin.ByteArray? = TODO()
+        val response: ResponseEntity<Unit> = fapi.createFamily(userID, picture)
 
         // TODO: test validations
     }
@@ -84,9 +89,9 @@ class ApiApiTest {
      */
     @Test
     fun createShoppingListTest() {
-        val userID:kotlin.String = TODO()
-        val shoppinglistcreate:InlineObject3 = TODO()
-        val response: ResponseEntity<Unit> = api.createShoppingList(userID, shoppinglistcreate)
+        val userID: kotlin.String = TODO()
+        val shoppinglistcreate: InlineObject3 = TODO()
+        val response: ResponseEntity<Unit> = slapi.createShoppingList(userID, shoppinglistcreate)
 
         // TODO: test validations
     }
@@ -99,8 +104,8 @@ class ApiApiTest {
      */
     @Test
     fun deleteFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.deleteFamily(familyID)
+        val familyID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = fapi.deleteFamily(familyID)
 
         // TODO: test validations
     }
@@ -113,9 +118,9 @@ class ApiApiTest {
      */
     @Test
     fun deleteShoppingItemTest() {
-        val shoppingitemID:kotlin.String = TODO()
-        val shoppinglistID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.deleteShoppingItem(shoppingitemID, shoppinglistID)
+        val shoppingitemID: kotlin.String = TODO()
+        val shoppinglistID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = siapi.deleteShoppingItem(shoppingitemID, shoppinglistID)
 
         // TODO: test validations
     }
@@ -128,8 +133,8 @@ class ApiApiTest {
      */
     @Test
     fun deleteShoppingListTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.deleteShoppingList(shoppinglistID)
+        val shoppinglistID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = slapi.deleteShoppingList(shoppinglistID)
 
         // TODO: test validations
     }
@@ -142,8 +147,8 @@ class ApiApiTest {
      */
     @Test
     fun deleteUserTest() {
-        val userID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.deleteUser(userID)
+        val userID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = uapi.deleteUser(userID)
 
         // TODO: test validations
     }
@@ -156,9 +161,9 @@ class ApiApiTest {
      */
     @Test
     fun doneShoppingItemTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val shoppingitemID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.doneShoppingItem(shoppinglistID, shoppingitemID)
+        val shoppinglistID: kotlin.String = TODO()
+        val shoppingitemID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = siapi.doneShoppingItem(shoppinglistID, shoppingitemID)
 
         // TODO: test validations
     }
@@ -171,9 +176,9 @@ class ApiApiTest {
      */
     @Test
     fun editFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val family:Family = TODO()
-        val response: ResponseEntity<Unit> = api.editFamily(familyID, family)
+        val familyID: kotlin.String = TODO()
+        val family: Family = TODO()
+        val response: ResponseEntity<Unit> = fapi.editFamily(familyID, family)
 
         // TODO: test validations
     }
@@ -186,10 +191,10 @@ class ApiApiTest {
      */
     @Test
     fun editShoppingItemTest() {
-        val shoppingitemID:kotlin.String = TODO()
-        val shoppinglistID:kotlin.String = TODO()
-        val shoppingitem:ShoppingItem = TODO()
-        val response: ResponseEntity<Unit> = api.editShoppingItem(shoppingitemID, shoppinglistID, shoppingitem)
+        val shoppingitemID: kotlin.String = TODO()
+        val shoppinglistID: kotlin.String = TODO()
+        val shoppingitem: ShoppingItem = TODO()
+        val response: ResponseEntity<Unit> = siapi.editShoppingItem(shoppingitemID, shoppinglistID, shoppingitem)
 
         // TODO: test validations
     }
@@ -202,9 +207,9 @@ class ApiApiTest {
      */
     @Test
     fun editShoppingListTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val shoppinglist:ShoppingList = TODO()
-        val response: ResponseEntity<Unit> = api.editShoppingList(shoppinglistID, shoppinglist)
+        val shoppinglistID: kotlin.String = TODO()
+        val shoppinglist: ShoppingList = TODO()
+        val response: ResponseEntity<Unit> = slapi.editShoppingList(shoppinglistID, shoppinglist)
 
         // TODO: test validations
     }
@@ -217,9 +222,9 @@ class ApiApiTest {
      */
     @Test
     fun editUserTest() {
-        val userID:kotlin.String = TODO()
-        val user:User? = TODO()
-        val response: ResponseEntity<Unit> = api.editUser(userID, user)
+        val userID: kotlin.String = TODO()
+        val user: User? = TODO()
+        val response: ResponseEntity<Unit> = uapi.editUser(userID, user)
 
         // TODO: test validations
     }
@@ -232,8 +237,8 @@ class ApiApiTest {
      */
     @Test
     fun getAllShoppingItemTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val response: ResponseEntity<List<InlineResponse200>> = api.getAllShoppingItem(shoppinglistID)
+        val shoppinglistID: kotlin.String = TODO()
+        val response: ResponseEntity<List<InlineResponse200>> = siapi.getAllShoppingItem(shoppinglistID)
 
         // TODO: test validations
     }
@@ -246,8 +251,8 @@ class ApiApiTest {
      */
     @Test
     fun getFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.getFamily(familyID)
+        val familyID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = fapi.getFamily(familyID)
 
         // TODO: test validations
     }
@@ -260,9 +265,9 @@ class ApiApiTest {
      */
     @Test
     fun getShoppingItemTest() {
-        val shoppingitemID:kotlin.String = TODO()
-        val shoppinglistID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.getShoppingItem(shoppingitemID, shoppinglistID)
+        val shoppingitemID: kotlin.String = TODO()
+        val shoppinglistID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = siapi.getShoppingItem(shoppingitemID, shoppinglistID)
 
         // TODO: test validations
     }
@@ -275,8 +280,8 @@ class ApiApiTest {
      */
     @Test
     fun getShoppingListTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.getShoppingList(shoppinglistID)
+        val shoppinglistID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = slapi.getShoppingList(shoppinglistID)
 
         // TODO: test validations
     }
@@ -289,8 +294,8 @@ class ApiApiTest {
      */
     @Test
     fun getShoppingListbyFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val response: ResponseEntity<List<InlineResponse200>> = api.getShoppingListbyFamily(familyID)
+        val familyID: kotlin.String = TODO()
+        val response: ResponseEntity<List<InlineResponse200>> = slapi.getShoppingListbyFamily(familyID)
 
         // TODO: test validations
     }
@@ -303,8 +308,8 @@ class ApiApiTest {
      */
     @Test
     fun getUserTest() {
-        val userID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.getUser(userID)
+        val userID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = uapi.getUser(userID)
 
         // TODO: test validations
     }
@@ -317,9 +322,9 @@ class ApiApiTest {
      */
     @Test
     fun inviteUserTest() {
-        val userID:kotlin.String = TODO()
-        val invite:InlineObject2? = TODO()
-        val response: ResponseEntity<Unit> = api.inviteUser(userID, invite)
+        val userID: kotlin.String = TODO()
+        val invite: InlineObject2? = TODO()
+        val response: ResponseEntity<Unit> = uapi.inviteUser(userID, invite)
 
         // TODO: test validations
     }
@@ -332,8 +337,8 @@ class ApiApiTest {
      */
     @Test
     fun loginTest() {
-        val user:InlineObject1? = TODO()
-        val response: ResponseEntity<Unit> = api.login(user)
+        val user: InlineObject1? = TODO()
+        val response: ResponseEntity<Unit> = uapi.login(user)
 
         // TODO: test validations
     }
@@ -346,8 +351,8 @@ class ApiApiTest {
      */
     @Test
     fun regTest() {
-        val user:InlineObject? = TODO()
-        val response: ResponseEntity<Unit> = api.reg(user)
+        val user: InlineObject? = TODO()
+        val response: ResponseEntity<Unit> = uapi.reg(user)
 
         // TODO: test validations
     }
@@ -360,9 +365,9 @@ class ApiApiTest {
      */
     @Test
     fun removeUserFromFamilyTest() {
-        val familyID:kotlin.String = TODO()
-        val user:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.removeUserFromFamily(familyID, user)
+        val familyID: kotlin.String = TODO()
+        val user: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = fapi.removeUserFromFamily(familyID, user)
 
         // TODO: test validations
     }
@@ -375,9 +380,9 @@ class ApiApiTest {
      */
     @Test
     fun removeUserFromShoppingListTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val userID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.removeUserFromShoppingList(shoppinglistID, userID)
+        val shoppinglistID: kotlin.String = TODO()
+        val userID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = slapi.removeUserFromShoppingList(shoppinglistID, userID)
 
         // TODO: test validations
     }
@@ -390,9 +395,9 @@ class ApiApiTest {
      */
     @Test
     fun undoneShoppingItemTest() {
-        val shoppinglistID:kotlin.String = TODO()
-        val shoppingitemID:kotlin.String = TODO()
-        val response: ResponseEntity<Unit> = api.undoneShoppingItem(shoppinglistID, shoppingitemID)
+        val shoppinglistID: kotlin.String = TODO()
+        val shoppingitemID: kotlin.String = TODO()
+        val response: ResponseEntity<Unit> = siapi.undoneShoppingItem(shoppinglistID, shoppingitemID)
 
         // TODO: test validations
     }
