@@ -28,10 +28,9 @@ class ShoppingListController {
 
     @RequestMapping(
         method = [RequestMethod.POST],
-        value = ["/api/shoppinglist/create/{userID}"]
+        value = ["/api/shoppinglist/create"]
     )
     fun createShoppingList(
-        @PathVariable("userID") userID: kotlin.String,
         @Valid @RequestBody shoppinglistcreate: InlineObject3
     ):
             ResponseEntity<Unit> {

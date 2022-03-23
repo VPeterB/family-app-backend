@@ -74,9 +74,8 @@ class ApiApiTest {
      */
     @Test
     fun createFamilyTest() {
-        val userID: kotlin.String = TODO()
         val picture: kotlin.ByteArray? = TODO()
-        val response: ResponseEntity<Unit> = fapi.createFamily(userID, picture)
+        val response: ResponseEntity<Unit> = fapi.createFamily(picture)
 
         // TODO: test validations
     }
@@ -89,9 +88,8 @@ class ApiApiTest {
      */
     @Test
     fun createShoppingListTest() {
-        val userID: kotlin.String = TODO()
         val shoppinglistcreate: InlineObject3 = TODO()
-        val response: ResponseEntity<Unit> = slapi.createShoppingList(userID, shoppinglistcreate)
+        val response: ResponseEntity<Unit> = slapi.createShoppingList(shoppinglistcreate)
 
         // TODO: test validations
     }
@@ -322,9 +320,8 @@ class ApiApiTest {
      */
     @Test
     fun inviteUserTest() {
-        val userID: kotlin.String = TODO()
         val invite: InlineObject2? = TODO()
-        val response: ResponseEntity<Unit> = uapi.inviteUser(userID, invite)
+        val response: ResponseEntity<Unit> = uapi.inviteUser(invite)
 
         // TODO: test validations
     }

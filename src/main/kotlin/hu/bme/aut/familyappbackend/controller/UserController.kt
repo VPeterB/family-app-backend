@@ -66,10 +66,10 @@ class UserController {
 
     @RequestMapping(
         method = [RequestMethod.PUT],
-        value = ["/api/user/{userID}/sendinvite"]
+        value = ["/api/user/sendinvite"]
     )
     fun inviteUser(
-        @PathVariable("userID") userID: kotlin.String, @Valid @RequestBody(required = false) invite: InlineObject2?
+        @Valid @RequestBody(required = false) invite: InlineObject2?
     ): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }

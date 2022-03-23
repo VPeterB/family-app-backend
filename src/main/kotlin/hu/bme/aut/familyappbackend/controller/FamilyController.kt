@@ -23,10 +23,9 @@ class FamilyController {
 
     @RequestMapping(
         method = [RequestMethod.POST],
-        value = ["/api/family/create/{userID}"]
+        value = ["/api/family/create"]
     )
     fun createFamily(
-        @PathVariable("userID") userID: kotlin.String,
         @Valid @RequestBody(required = false) picture: kotlin.ByteArray?
     ):
             ResponseEntity<Unit> {
