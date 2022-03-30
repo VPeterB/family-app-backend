@@ -1,76 +1,50 @@
 package hu.bme.aut.familyappbackend.controller
 
-import hu.bme.aut.familyappbackend.model.InlineObject
-import hu.bme.aut.familyappbackend.model.InlineObject1
-import hu.bme.aut.familyappbackend.model.InlineObject2
+import hu.bme.aut.familyappbackend.dto.UserDTO
+import hu.bme.aut.familyappbackend.inline.Inv
+import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.User
+import hu.bme.aut.familyappbackend.repository.UserRepository
+import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
+
 @RestController
-@Validated
-@RequestMapping("\${api.base-path:/familyapp/FamilyApp/1.0.0}")
-class UserController {
-
-    @RequestMapping(
-        method = [RequestMethod.POST],
-        value = ["/api/register"]
-    )
-    fun reg(
-        @Valid @RequestBody(required = false) user: InlineObject?
-    ): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+@RequestMapping("/api/user")
+class UserController (private val userRepository: UserRepository){
+    @RequestMapping(value = ["/{userID}"], method = [RequestMethod.DELETE])
+    fun deleteUser(@PathVariable("userID") userID: Int): ResponseEntity<*> {
+        val user: User =userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body("User with this ID not found.")
+        return ResponseEntity.ok(userRepository.delete(user))
     }
 
-    @RequestMapping(
-        method = [RequestMethod.POST],
-        value = ["/api/login"]
-    )
-    fun login(
-        @Valid @RequestBody(required = false) user: InlineObject1?
-    ): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    @RequestMapping(value = ["/{userID}"], method = [RequestMethod.PUT])
+    fun editUser(@PathVariable("userID") userID: Int, @Valid @RequestBody(required = false) userE: User?): ResponseEntity<*> {
+        val user: User? = userRepository.findUserByID(userID)
+        if (userE != null) {
+            if (user == null || userID != userE.ID) {
+                return ResponseEntity.badRequest().body("User with this ID not found. Or userID not match with the userE's id")
+            }
+            userRepository.delete(user)
+            return ResponseEntity.ok(userRepository.save(userE))
+        }else{
+            return ResponseEntity.badRequest().body("No user in body.")
+        }
     }
 
-    @RequestMapping(
-        method = [RequestMethod.DELETE],
-        value = ["/api/user/{userID}"]
-    )
-    fun deleteUser(@PathVariable("userID") userID: kotlin.String):
-            ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    @RequestMapping(value = ["/{userID}"], method = [RequestMethod.GET])
+    fun getUser( @PathVariable("userID") userID: Int): ResponseEntity<*> {
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body("User with this ID not found.")
+        val userMapper = Mappers.getMapper(UserMapper::class.java)
+        val userDto = userMapper.convertToDto(user)
+        return ResponseEntity.ok(userDto)
     }
 
-    @RequestMapping(
-        method = [RequestMethod.PUT],
-        value = ["/api/user/{userID}"]
-    )
-    fun editUser(
-        @PathVariable("userID") userID: kotlin.String, @Valid @RequestBody(required = false) user: User?
-    ): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
-
-    @RequestMapping(
-        method = [RequestMethod.GET],
-        value = ["/api/user/{userID}"]
-    )
-    fun getUser(
-        @PathVariable("userID") userID: kotlin.String
-    ): ResponseEntity<Unit> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
-
-    @RequestMapping(
-        method = [RequestMethod.PUT],
-        value = ["/api/user/sendinvite"]
-    )
-    fun inviteUser(
-        @Valid @RequestBody(required = false) invite: InlineObject2?
-    ): ResponseEntity<Unit> {
+    @RequestMapping(value = ["/sendinvite"], method = [RequestMethod.PUT])
+    fun inviteUser( @Valid @RequestBody(required = false) invite: Inv?): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }
