@@ -16,9 +16,9 @@ data class ShoppingItem(
     val name: String,
 
     @Column(name = "done")
-    val done: Boolean? = null,
+    val done: Boolean = false,
 
     @ManyToOne
-    @JoinColumn(name = "shoppinglist")
-    val shoppingList: ShoppingList? = null
+    @JoinColumn(name = "shoppinglist", nullable = false)
+    val shoppingList: ShoppingList
 )

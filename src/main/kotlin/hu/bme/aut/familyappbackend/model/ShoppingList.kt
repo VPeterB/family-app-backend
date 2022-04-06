@@ -16,7 +16,7 @@ data class ShoppingList(
 
     @ManyToOne
     @JoinColumn(name = "family")
-    val family: Family? = null,
+    val family: Family,
 
     @ManyToMany(mappedBy = "shoppingLists")
     var users: List<User>? = null,
