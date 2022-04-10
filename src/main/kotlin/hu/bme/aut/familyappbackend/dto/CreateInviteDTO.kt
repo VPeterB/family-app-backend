@@ -1,8 +1,8 @@
-package hu.bme.aut.familyappbackend.inline
+package hu.bme.aut.familyappbackend.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class Inv(
+data class CreateInviteDTO(
     @field:JsonProperty("email", required = true)
     val email: String,
 

@@ -1,6 +1,6 @@
 package hu.bme.aut.familyappbackend.dto
 
-data class ShoppingListDTO(
+data class GetShoppingListDTO(
     val ID: Int,
     val name: String,
     val familyID: Int,

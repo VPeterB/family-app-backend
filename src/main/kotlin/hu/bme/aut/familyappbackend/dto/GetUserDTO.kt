@@ -5,7 +5,7 @@ import lombok.Setter
 
 @Getter
 @Setter
-data class UserDTO(
+data class GetUserDTO(
     val ID: Int = 0,
     val email: String,
     val password: String,

@@ -1,7 +1,6 @@
 package hu.bme.aut.familyappbackend.controller
 
-import hu.bme.aut.familyappbackend.dto.ShoppingListDTO
-import hu.bme.aut.familyappbackend.inline.CSL
+import hu.bme.aut.familyappbackend.dto.CreateShoppingListDTO
 import hu.bme.aut.familyappbackend.mapper.FamilyMapper
 import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
 import hu.bme.aut.familyappbackend.model.Family
@@ -23,7 +22,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     }
 
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
-    fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CSL): ResponseEntity<Unit> {
+    fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 

@@ -1,6 +1,6 @@
 package hu.bme.aut.familyappbackend.dto
 
-data class FamilyDTO(
+data class GetFamilyDTO(
     val ID: Int,
     val userIDs: List<Int>? = null,
     val shoppingListIDs: List<Int>? = null,

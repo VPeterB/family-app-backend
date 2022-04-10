@@ -1,8 +1,8 @@
-package hu.bme.aut.familyappbackend.inline
+package hu.bme.aut.familyappbackend.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class Login(
+data class CreateUserDTO(
     @field:JsonProperty("password", required = true)
     val password: String,
 

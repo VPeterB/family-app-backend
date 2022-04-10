@@ -1,6 +1,6 @@
 package hu.bme.aut.familyappbackend.controller
 
-import hu.bme.aut.familyappbackend.inline.Login
+import hu.bme.aut.familyappbackend.dto.CreateUserDTO
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -15,7 +15,7 @@ import javax.validation.Valid
 @RequestMapping("/api")
 class AuthenticationController(private val userRepository: UserRepository) {
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
-    fun regUser(@Valid @RequestBody regUser: Login): ResponseEntity<*>? {
+    fun regUser(@Valid @RequestBody regUser: CreateUserDTO): ResponseEntity<*>? {
         val user: User? = userRepository.findUserByEmail(regUser.email)
         if (user != null) {
             return ResponseEntity.badRequest().body("User with this email already exists")
@@ -25,7 +25,7 @@ class AuthenticationController(private val userRepository: UserRepository) {
     }
 
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
-    fun login(@Valid @RequestBody userL: Login): ResponseEntity<*> {
+    fun login(@Valid @RequestBody userL: CreateUserDTO): ResponseEntity<*> {
         val user: User? = userRepository.findUserByEmail(userL.email)
         if(user != null && user.password == userL.password){
             return ResponseEntity.ok(HttpStatus.ACCEPTED)

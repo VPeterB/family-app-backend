@@ -1,7 +1,6 @@
 package hu.bme.aut.familyappbackend.controller
 
-import hu.bme.aut.familyappbackend.dto.UserDTO
-import hu.bme.aut.familyappbackend.inline.Inv
+import hu.bme.aut.familyappbackend.dto.CreateInviteDTO
 import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.UserRepository
@@ -44,7 +43,7 @@ class UserController (private val userRepository: UserRepository){
     }
 
     @RequestMapping(value = ["/sendinvite"], method = [RequestMethod.PUT])
-    fun inviteUser( @Valid @RequestBody(required = false) invite: Inv?): ResponseEntity<Unit> {
+    fun inviteUser( @Valid @RequestBody(required = false) invite: CreateInviteDTO?): ResponseEntity<Unit> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

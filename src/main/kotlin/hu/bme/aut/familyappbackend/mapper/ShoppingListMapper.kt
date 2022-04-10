@@ -1,14 +1,12 @@
 package hu.bme.aut.familyappbackend.mapper
 
-import hu.bme.aut.familyappbackend.dto.FamilyDTO
-import hu.bme.aut.familyappbackend.dto.ShoppingListDTO
-import hu.bme.aut.familyappbackend.model.Family
+import hu.bme.aut.familyappbackend.dto.GetShoppingListDTO
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import org.mapstruct.Mapper
 
 @Mapper(componentModel = "spring")
 interface ShoppingListMapper {
-    fun convertToDto(shoppingList: ShoppingList) : ShoppingListDTO {
+    fun convertToDto(shoppingList: ShoppingList) : GetShoppingListDTO {
         val shoppingItemIDS: MutableList<Int> = mutableListOf()
         val userIDS: MutableList<Int> = mutableListOf()
         for (shoppingItem in shoppingList.shoppingItems!!){
@@ -17,6 +15,6 @@ interface ShoppingListMapper {
         for (user in shoppingList.users!!){
             userIDS.add(user.ID)
         }
-        return ShoppingListDTO(shoppingList.ID, shoppingList.name, shoppingList.family.ID, userIDS, shoppingItemIDS)
+        return GetShoppingListDTO(shoppingList.ID, shoppingList.name, shoppingList.family.ID, userIDS, shoppingItemIDS)
     }
 }

@@ -1,8 +1,8 @@
-package hu.bme.aut.familyappbackend.inline
+package hu.bme.aut.familyappbackend.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class CSL(
+data class CreateShoppingListDTO(
     @field:JsonProperty("familyID", required = true)
     val familyID: Int,
 
