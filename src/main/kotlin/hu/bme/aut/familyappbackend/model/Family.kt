@@ -13,7 +13,7 @@ data class Family (
     val ID: Int,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
-    val users: List<User>? = null,
+    var users: List<User>? = null,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
     val shoppingLists: List<ShoppingList>? = null,

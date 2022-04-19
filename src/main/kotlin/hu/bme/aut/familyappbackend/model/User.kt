@@ -8,13 +8,13 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false)
-    val ID: Int = 0,
+    val ID: Int,
 
     @Column(name = "email", nullable = false)
-    val email: String,
+    var email: String,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 
     @Column(name = "phonenumber")
     val phonenumber: String? = null,
@@ -33,11 +33,11 @@ data class User(
 
     @ManyToOne
     @JoinColumn(name = "family")
-    val family: Family? = null,
+    var family: Family? = null,
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "invite")
-    val invite: Invite? = null,
+    var invite: Invite? = null,
 
     @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(

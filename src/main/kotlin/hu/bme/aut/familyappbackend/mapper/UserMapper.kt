@@ -14,9 +14,4 @@ interface UserMapper {
         return GetUserDTO(user.ID, user.email, user.password, user.phonenumber, user.firstname, user.lastname, user.username, user.category,
             user.family?.ID, user.invite?.ID, shoppingIDS)
     }
-
-    fun convertToModel(user: GetUserDTO) : User{
-        //TODO family, invite, shoppingLists 'bevarázsolása'
-        return User(user.ID, user.email, user.password, user.phonenumber, user.firstname, user.lastname, user.username, user.category)
-    }
 }
