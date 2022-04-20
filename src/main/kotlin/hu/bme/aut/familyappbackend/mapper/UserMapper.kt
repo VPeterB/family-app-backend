@@ -2,16 +2,23 @@ package hu.bme.aut.familyappbackend.mapper
 
 import hu.bme.aut.familyappbackend.dto.GetUserDTO
 import hu.bme.aut.familyappbackend.model.User
+import org.mapstruct.AfterMapping
 import org.mapstruct.Mapper
+import org.mapstruct.MappingTarget
 
 @Mapper(componentModel = "spring")
-interface UserMapper {
-    fun convertToDto(user: User) : GetUserDTO{
+abstract class UserMapper {
+
+    abstract  fun convertToDto(user: User) : GetUserDTO
+
+    @AfterMapping
+    fun getId(@MappingTarget target:GetUserDTO, source:User){
+        target.familyID = source.family?.ID
+        target.inviteID = source.invite?.ID
         val shoppingIDS: MutableList<Int> = mutableListOf()
-        for (shoppingList in user.shoppingLists!!){
+        for (shoppingList in source.shoppingLists!!){
             shoppingIDS.add(shoppingList.ID)
         }
-        return GetUserDTO(user.ID, user.email, user.password, user.phonenumber, user.firstname, user.lastname, user.username, user.category,
-            user.family?.ID, user.invite?.ID, shoppingIDS)
+        target.shoppingListIDs = shoppingIDS
     }
 }

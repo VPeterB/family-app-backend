@@ -14,7 +14,7 @@ data class GetUserDTO(
     val lastname: String? = null,
     val username: String? = null,
     val category: String? = null,
-    val familyID: Int? = null,
-    val inviteID: Int? = null,
-    val shoppingListIDs: List<Int>? = null
+    var familyID: Int? = null,
+    var inviteID: Int? = null,
+    var shoppingListIDs: List<Int>? = null
 ){}

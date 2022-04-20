@@ -4,5 +4,5 @@ data class GetShoppingItemDTO(
     val ID: Int,
     val name: String,
     val done: Boolean,
-    val shoppingListID: Int
+    var shoppingListID: Int
 )
