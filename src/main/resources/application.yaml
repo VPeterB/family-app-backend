@@ -1,0 +1,10 @@
+# /src/main/resources/application.yml
+
+auth0:
+  audience: dev-pv1127.eu.auth0.com
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://http://familyapp.backend/
