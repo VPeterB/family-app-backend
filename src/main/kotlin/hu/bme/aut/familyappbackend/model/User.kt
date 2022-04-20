@@ -45,7 +45,7 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "ID")],
         inverseJoinColumns = [JoinColumn(name = "sl_id", referencedColumnName = "ID")]
     )
-    val shoppingLists: List<ShoppingList>? = null
+    var shoppingLists: List<ShoppingList>? = null
 )
 {
 }

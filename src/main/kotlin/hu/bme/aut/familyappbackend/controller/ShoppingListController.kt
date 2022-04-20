@@ -19,25 +19,31 @@ import javax.validation.Valid
 @RequestMapping("/api/shoppinglist")
 class ShoppingListController (private val shoppingListRepository: ShoppingListRepository, private val familyRepository: FamilyRepository, private val userRepository: UserRepository) {
     @RequestMapping(value = ["/{shoppinglistID}/adduser"], method = [RequestMethod.PUT])
-    fun addUserToShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val users: MutableList<User> = shoppingList.users as MutableList<User>
-        users.add(user)
-        shoppingList.users = users
-        return ResponseEntity.ok(shoppingListRepository.save(shoppingList))
+    fun addUserToShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val sUsers: MutableList<User> = shoppingList.users as MutableList<User>
+        sUsers.add(user)
+        shoppingList.users = sUsers
+        shoppingListRepository.save(shoppingList)
+        val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
+        uShoppingLists.add(shoppingList)
+        user.shoppingLists = uShoppingLists
+        userRepository.save(user)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
-    fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<*> {
-        val family: Family = familyRepository.findFamilyByID(shoppinglistcreate.familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+    fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<Unit> {
+        val family: Family = familyRepository.findFamilyByID(shoppinglistcreate.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val newSL = ShoppingList(0, shoppinglistcreate.name, family)
-        return ResponseEntity.ok(shoppingListRepository.save(newSL))
+        shoppingListRepository.save(newSL)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.DELETE])
-    fun deleteShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*> {
-        val sl: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+    fun deleteShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit> {
+        val sl: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(shoppingListRepository.delete(sl))
     }
 
@@ -69,14 +75,21 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
 
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])
     fun removeUserFromShoppingList(
-        @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val users: MutableList<User> = shoppingList.users as MutableList<User>
         if(!users.contains(user))
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+            return ResponseEntity(HttpStatus.NOT_FOUND)
         users.remove(user)
         shoppingList.users = users
-        return ResponseEntity.ok(shoppingListRepository.save(shoppingList))
+        shoppingListRepository.save(shoppingList)
+        val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
+        if(!uShoppingLists.contains(shoppingList))
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        uShoppingLists.remove(shoppingList)
+        user.shoppingLists = uShoppingLists
+        userRepository.save(user)
+        return ResponseEntity(HttpStatus.OK)
     }
 }

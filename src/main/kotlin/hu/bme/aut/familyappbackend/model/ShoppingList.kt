@@ -22,5 +22,5 @@ data class ShoppingList(
     var users: List<User>? = null,
 
     @OneToMany(mappedBy = "shoppingList", cascade = [CascadeType.ALL])
-    val shoppingItems: List<ShoppingItem>? = null
+    var shoppingItems: List<ShoppingItem>? = null
 )

@@ -20,11 +20,16 @@ import javax.validation.Valid
 @RequestMapping("/api/shoppinglist/{shoppinglistID}/shoppingitem")
 class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     @RequestMapping(value = ["/add"], method = [RequestMethod.POST])
-    fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
+    fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<Unit>
     {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val newSI = ShoppingItem(0, shoppingitem.name, shoppingitem.done, shoppingList)
-        return ResponseEntity.ok(shoppingItemRepository.save(newSI))
+        val shoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
+        shoppingItems.add(newSI)
+        shoppingList.shoppingItems = shoppingItems
+        shoppingListRepository.save(shoppingList)
+        shoppingItemRepository.save(newSI)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @RequestMapping( value = ["/{shoppingitemID}"], method = [RequestMethod.DELETE])
