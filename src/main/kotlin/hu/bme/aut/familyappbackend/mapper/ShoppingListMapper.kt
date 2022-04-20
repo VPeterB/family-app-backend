@@ -24,6 +24,6 @@ abstract class ShoppingListMapper {
         }
         target.shoppingItemIDs = shoppingItemIDS
         target.userIDs = userIDS
-        target.familyID = source.family.ID
+        target.familyID = source.family?.ID
     }
 }
