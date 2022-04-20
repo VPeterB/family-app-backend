@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CreateShoppingListDTO(
     @field:JsonProperty("familyID", required = true)
-    val familyID: Int,
+    val familyID: Int?,
 
     @field:JsonProperty("name", required = true)
     val name: String

@@ -35,6 +35,11 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
 
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
     fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<Unit> {
+        if(shoppinglistcreate.familyID == null){
+            val newSL = ShoppingList(0, shoppinglistcreate.name)
+            shoppingListRepository.save(newSL)
+            return ResponseEntity(HttpStatus.OK)
+        }
         val family: Family = familyRepository.findFamilyByID(shoppinglistcreate.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val newSL = ShoppingList(0, shoppinglistcreate.name, family)
         shoppingListRepository.save(newSL)
