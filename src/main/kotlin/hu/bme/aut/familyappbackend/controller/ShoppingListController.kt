@@ -10,6 +10,8 @@ import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
+import hu.bme.aut.familyappbackend.service.UserService
+import hu.bme.aut.familyappbackend.service.ShoppingListService
 import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,42 +20,37 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/shoppinglist")
-class ShoppingListController (private val shoppingListRepository: ShoppingListRepository, private val familyRepository: FamilyRepository, private val userRepository: UserRepository) {
+class ShoppingListController (private val shoppingListRepository: ShoppingListRepository, private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val userService: UserService, private val sLService: ShoppingListService) {
     @RequestMapping(value = ["/{shoppinglistID}/adduser"], method = [RequestMethod.PUT])
     fun addUserToShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val sUsers: MutableList<User> = shoppingList.users as MutableList<User>
-        sUsers.add(user)
-        shoppingList.users = sUsers
-        shoppingListRepository.save(shoppingList)
-        val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
-        uShoppingLists.add(shoppingList)
-        user.shoppingLists = uShoppingLists
-        userRepository.save(user)
+        sLService.addUser(shoppingList, user)
         return ResponseEntity(HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth -> meeting nem elég aoth0 kell a jwt, mert auth0 az a saját bejelentkezési rendszere alapján ellenőriz és ad hozzáférést az api végpontokhoz, az adatbázisban lévő saját(nem auth0) felhasználókhoz nem ad tokent
-    fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<Unit> {
-        if(shoppinglistcreate.familyID == null){
-            val newSL = ShoppingList(0, shoppinglistcreate.name)
-            shoppingListRepository.save(newSL)
-            return ResponseEntity(HttpStatus.OK)
+    fun createShoppingList(@RequestHeader jwt: String?, @Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
-        val family: Family = familyRepository.findFamilyByID(shoppinglistcreate.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val newSL = ShoppingList(0, shoppinglistcreate.name, family)
-        shoppingListRepository.save(newSL)
-        return ResponseEntity(HttpStatus.OK)
+        val user = userService.getUserByJWT(jwt)?: return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        val newSL = ShoppingList(0, shoppinglistcreate.name)
+        if(shoppinglistcreate.familyID != null){
+            val family: Family = familyRepository.findFamilyByID(shoppinglistcreate.familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+            newSL.family = family
+        }
+        val sl = sLService.addUser(newSL, user)
+        return ResponseEntity.ok(sl.ID)
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.DELETE])
     fun deleteShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit> {
         val sl: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(shoppingListRepository.delete(sl))
+        return ResponseEntity.ok(sLService.delete(sl))
     }
 
-    @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT])
+    @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT]) // név változtatásra, kötött adatokat nem kezel
     fun editShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppinglist: ShoppingList): ResponseEntity<*> {
         shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (shoppinglistID != shoppinglist.ID) {
@@ -76,7 +73,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         val familyDto = familyMapper.convertToDto(family)
         val shoppingListIDs = familyDto.shoppingListIDs
-        return ResponseEntity.ok(shoppingListIDs)
+        return ResponseEntity.ok(shoppingListIDs) // TODO backend más: kell a dto lista vagy elég így az id lista? meeting
     }
 
     @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET]) //DONE backend missing
@@ -91,20 +88,6 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])
     fun removeUserFromShoppingList(
         @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val users: MutableList<User> = shoppingList.users as MutableList<User>
-        if(!users.contains(user))
-            return ResponseEntity(HttpStatus.NOT_FOUND)
-        users.remove(user)
-        shoppingList.users = users
-        shoppingListRepository.save(shoppingList)
-        val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
-        if(!uShoppingLists.contains(shoppingList))
-            return ResponseEntity(HttpStatus.NOT_FOUND)
-        uShoppingLists.remove(shoppingList)
-        user.shoppingLists = uShoppingLists
-        userRepository.save(user)
-        return ResponseEntity(HttpStatus.OK)
+        return sLService.removeUser(shoppinglistID, userID)
     }
 }

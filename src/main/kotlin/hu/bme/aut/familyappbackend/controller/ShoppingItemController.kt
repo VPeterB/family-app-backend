@@ -10,6 +10,7 @@ import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
+import hu.bme.aut.familyappbackend.service.ShoppingItemService
 import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,25 +19,19 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/shoppinglist/{shoppinglistID}/shoppingitem")
-class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
+class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository, private val shoppingItemService: ShoppingItemService){
     @RequestMapping(value = ["/add"], method = [RequestMethod.POST])
     fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
     {
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        val newSI = ShoppingItem(0, shoppingitem.name, shoppingitem.done, shoppingList)
-        val shoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
-        shoppingItems.add(newSI)
-        shoppingList.shoppingItems = shoppingItems
-        shoppingListRepository.save(shoppingList)
-        val si = shoppingItemRepository.save(newSI)
-        return ResponseEntity.ok(si.ID) //id visszaküldése <- //DONE backend visszaadja e az id-t
+        return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).ID) //id visszaküldése <- //DONE backend visszaadja e az id-t
     }
 
     @RequestMapping( value = ["/{shoppingitemID}"], method = [RequestMethod.DELETE])
     fun deleteShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit>
     {
         val si: ShoppingItem = shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(shoppingItemRepository.delete(si))
+        return ResponseEntity.ok(shoppingItemService.delete(si))
     }
 
     @RequestMapping(value = ["/{shoppingitemID}/done"], method = [RequestMethod.PUT])
