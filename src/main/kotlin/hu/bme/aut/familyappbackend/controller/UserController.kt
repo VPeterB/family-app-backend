@@ -1,6 +1,7 @@
 package hu.bme.aut.familyappbackend.controller
 
 import hu.bme.aut.familyappbackend.dto.CreateInviteDTO
+import hu.bme.aut.familyappbackend.mapper.InviteMapper
 import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.Invite
@@ -42,13 +43,26 @@ class UserController (private val userRepository: UserRepository, private val fa
     }
 
     @RequestMapping(value = ["/sendinvite"], method = [RequestMethod.PUT])
-    fun inviteUser( @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<*> {
-        val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyByID(invite.familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+    fun inviteUser( @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<Unit> {
+        val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyByID(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val newInvite = Invite(0, family, user)
         val i = inviteRepository.save(newInvite)
         user.invite = i
         userRepository.save(user)
-        return ResponseEntity.ok(HttpStatus.OK)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
+    fun getUserInvite( @PathVariable("userID") userID: Int): ResponseEntity<*> {
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val inviteId = user.invite?.ID
+        if(inviteId != null){
+            val invite: Invite = inviteRepository.findInviteByID(inviteId)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+            val inviteMapper = Mappers.getMapper(InviteMapper::class.java)
+            val inviteDto = inviteMapper.convertToDto(invite)
+            return ResponseEntity.ok(inviteDto)
+        }
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT)
     }
 }

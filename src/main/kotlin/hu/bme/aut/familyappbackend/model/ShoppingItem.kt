@@ -19,6 +19,6 @@ data class ShoppingItem(
     var done: Boolean = false,
 
     @ManyToOne
-    @JoinColumn(name = "shoppinglist", nullable = false)
-    val shoppingList: ShoppingList
+    @JoinColumn(name = "shoppinglist")
+    val shoppingList: ShoppingList?  = null
 )

@@ -29,15 +29,15 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
+    override fun configure(http: HttpSecurity){
         http.authorizeRequests()
             .mvcMatchers("/api/login").permitAll()
             .mvcMatchers("/api/register").permitAll()
             .mvcMatchers("/api/user/*").authenticated()
             .mvcMatchers("/api/family/*").authenticated()
             .mvcMatchers("/api/shoppinglist/*").authenticated()
-            .and()
-            .oauth2ResourceServer().jwt()
+            .and().cors()
+            .and().oauth2ResourceServer().jwt()
     }
 
 }

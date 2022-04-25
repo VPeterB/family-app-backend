@@ -16,8 +16,8 @@ import javax.validation.Valid
 class FamilyController (private val familyRepository: FamilyRepository, private val userRepository: UserRepository) {
     @RequestMapping(value = ["/{familyID}/adduser"],method = [RequestMethod.PUT])
     fun addUserToFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val users: MutableList<User> = family.users as MutableList<User>
         users.add(user)
         family.users = users
@@ -41,7 +41,7 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.PUT])
     fun editFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody family: Family): ResponseEntity<*> {
-        familyRepository.findFamilyByID(familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (familyID != family.ID) {
             return ResponseEntity.badRequest().body("FamilyID not match with the familyE's id")
         }
@@ -50,7 +50,7 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.GET])
     fun getFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
-        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         val familyDto = familyMapper.convertToDto(family)
         return ResponseEntity.ok(familyDto)
@@ -58,11 +58,11 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
 
     @RequestMapping(value = ["/{familyID}/removeuser"], method = [RequestMethod.PUT])
     fun removeUserFromFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val users: MutableList<User> = family.users as MutableList<User>
         if(!users.contains(user))
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+            return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         users.remove(user)
         family.users = users
         return ResponseEntity.ok(familyRepository.save(family))

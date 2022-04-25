@@ -54,7 +54,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT])
     fun editShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppinglist: ShoppingList): ResponseEntity<*> {
-        shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (shoppinglistID != shoppinglist.ID) {
             return ResponseEntity.badRequest().body("ShoppingListID not match with the shoppingListE's id")
         }
@@ -63,7 +63,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.GET])
     fun getShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*> {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         val shoppingListDto = shoppingListMapper.convertToDto(shoppingList)
         return ResponseEntity.ok(shoppingListDto)
@@ -71,7 +71,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
 
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])
     fun getShoppingListsByFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
-        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         val familyDto = familyMapper.convertToDto(family)
         val shoppingListIDs = familyDto.shoppingListIDs
