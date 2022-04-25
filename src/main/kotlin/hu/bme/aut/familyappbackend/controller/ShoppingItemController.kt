@@ -20,16 +20,16 @@ import javax.validation.Valid
 @RequestMapping("/api/shoppinglist/{shoppinglistID}/shoppingitem")
 class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     @RequestMapping(value = ["/add"], method = [RequestMethod.POST])
-    fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<Unit>
+    fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
     {
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val newSI = ShoppingItem(0, shoppingitem.name, shoppingitem.done, shoppingList)
         val shoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
         shoppingItems.add(newSI)
         shoppingList.shoppingItems = shoppingItems
         shoppingListRepository.save(shoppingList)
-        shoppingItemRepository.save(newSI)
-        return ResponseEntity(HttpStatus.OK)
+        val si = shoppingItemRepository.save(newSI)
+        return ResponseEntity.ok(si.ID) //id visszaküldése <- //DONE backend visszaadja e az id-t
     }
 
     @RequestMapping( value = ["/{shoppingitemID}"], method = [RequestMethod.DELETE])
@@ -78,7 +78,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         val sList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val sListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         val sListDto = sListMapper.convertToDto(sList)
-        return ResponseEntity.ok(sListDto.shoppingItemIDs)
+        return ResponseEntity.ok(sListDto.shoppingItemIDs)  // TODO backend más: kell a dto lista vagy elég így az id lista?
     }
 
     @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET])

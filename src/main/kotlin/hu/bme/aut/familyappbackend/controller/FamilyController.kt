@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import javax.validation.Valid
 
 @RestController
@@ -27,8 +28,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         return ResponseEntity.ok(HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth user
-    fun createFamily(@Valid @RequestBody(required = false) picture: ByteArray?): ResponseEntity<*> {
+    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth user + kép // TODO backend picture bytearray-t vár --> meeting: MultipartFile
+    fun createFamily(@Valid @RequestBody(required = false) picture: MultipartFile?): ResponseEntity<*> {
         val family = Family(0 /*add owner*/)
         return ResponseEntity.ok(familyRepository.save(family))
     }

@@ -53,7 +53,7 @@ class UserController (private val userRepository: UserRepository, private val fa
         return ResponseEntity(HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET]) //DONE ilyen fgv nincs + inviteDTO + inviteMapper
     fun getUserInvite( @PathVariable("userID") userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         val inviteId = user.invite?.ID

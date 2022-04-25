@@ -35,5 +35,5 @@ class AuthenticationController(private val authService: AuthService, private val
         }
         return ResponseEntity.badRequest().body("Wrong email or password")
     }
-    //TODO JWT, Auth0
+    //TODO JWT, Auth0?
 }

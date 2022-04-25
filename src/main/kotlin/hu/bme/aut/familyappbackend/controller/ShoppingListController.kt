@@ -3,6 +3,7 @@ package hu.bme.aut.familyappbackend.controller
 import hu.bme.aut.familyappbackend.dto.CreateShoppingListDTO
 import hu.bme.aut.familyappbackend.mapper.FamilyMapper
 import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
+import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.model.User
@@ -33,7 +34,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         return ResponseEntity(HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth -> meeting nem elég aoth0 kell a jwt, mert auth0 az a saját bejelentkezési rendszere alapján ellenőriz és ad hozzáférést az api végpontokhoz, az adatbázisban lévő saját(nem auth0) felhasználókhoz nem ad tokent
     fun createShoppingList(@Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<Unit> {
         if(shoppinglistcreate.familyID == null){
             val newSL = ShoppingList(0, shoppinglistcreate.name)
@@ -76,6 +77,15 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val familyDto = familyMapper.convertToDto(family)
         val shoppingListIDs = familyDto.shoppingListIDs
         return ResponseEntity.ok(shoppingListIDs)
+    }
+
+    @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET]) //DONE backend missing
+    fun getShoppingListsByUser(@PathVariable("userID") userID: Int): ResponseEntity<*> {
+        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        val userMapper = Mappers.getMapper(UserMapper::class.java)
+        val userDto = userMapper.convertToDto(user)
+        val shoppingListIDs = userDto.shoppingListIDs
+        return ResponseEntity.ok(shoppingListIDs) // TODO backend más: kell a dto lista vagy elég így az id lista? meeting
     }
 
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])
