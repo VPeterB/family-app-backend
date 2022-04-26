@@ -15,7 +15,9 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         return familyRepository.save(Family(0, users))
     }
 
-    fun addUser(family: Family, user: User): Family {
+    fun addUser(family: Family, user: User): Family? {
+        if(family.users == null)
+            return null
         val fUsers: MutableList<User> = family.users as MutableList<User>
         fUsers.add(user)
         family.users = fUsers
@@ -47,7 +49,10 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         familyRepository.delete(family)
     }
 
-    fun removeUser(family: Family, user: User): Family {
+    fun removeUser(family: Family, user: User): Family? {
+        if(family.users == null){
+            return null
+        }
         val users: MutableList<User> = family.users as MutableList<User>
         if(users.contains(user)){
             users.remove(user)

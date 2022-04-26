@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service
 class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     fun save (shoppingItem: CreateShoppingItemDTO, shoppingList: ShoppingList): ShoppingItem{
         val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, shoppingList)
-        val shoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
+        var shoppingItems: MutableList<ShoppingItem> = mutableListOf()
+        if(shoppingList.shoppingItems != null){
+            shoppingItems = shoppingList.shoppingItems as MutableList<ShoppingItem>
+        }
         shoppingItems.add(newSI)
         shoppingList.shoppingItems = shoppingItems
         shoppingListRepository.save(shoppingList)
@@ -23,11 +26,13 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
 
     fun delete (shoppingItem: ShoppingItem){
         val shoppingList = shoppingItem.shoppingList
-        val lShoppingItems: MutableList<ShoppingItem> = shoppingList?.shoppingItems as MutableList<ShoppingItem>
-        if (lShoppingItems.contains(shoppingItem)){
-            lShoppingItems.remove(shoppingItem)
-            shoppingList.shoppingItems = lShoppingItems
-            shoppingListRepository.save(shoppingList)
+        if(shoppingList?.shoppingItems != null){
+            val lShoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
+            if (lShoppingItems.contains(shoppingItem)){
+                lShoppingItems.remove(shoppingItem)
+                shoppingList.shoppingItems = lShoppingItems
+                shoppingListRepository.save(shoppingList)
+            }
         }
     }
 
@@ -39,10 +44,12 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
     fun byShoppingList(sList: ShoppingList): MutableList<GetShoppingItemDTO> {
         val rSIs = mutableListOf<GetShoppingItemDTO>()
         val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
-        val shoppingItems = sList.shoppingItems as MutableList<ShoppingItem>
-        for(si in shoppingItems){
-            val shoppingItemDTO = shoppingItemMapper.convertToDto(si)
-            rSIs.add(shoppingItemDTO)
+        if(sList.shoppingItems != null){
+            val shoppingItems = sList.shoppingItems as MutableList<ShoppingItem>
+            for(si in shoppingItems){
+                val shoppingItemDTO = shoppingItemMapper.convertToDto(si)
+                rSIs.add(shoppingItemDTO)
+            }
         }
         return rSIs
     }

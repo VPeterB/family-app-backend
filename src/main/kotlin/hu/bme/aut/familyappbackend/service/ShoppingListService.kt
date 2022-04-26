@@ -17,11 +17,17 @@ import org.springframework.stereotype.Service
 @Service
 class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository){
     fun addUser(shoppingList: ShoppingList, user: User): ShoppingList{
-        val sUsers: MutableList<User> = shoppingList.users as MutableList<User>
+        var sUsers: MutableList<User> = mutableListOf()
+        if(shoppingList.users != null){
+            sUsers= shoppingList.users as MutableList<User>
+        }
         sUsers.add(user)
         shoppingList.users = sUsers
         val sl = shoppingListRepository.save(shoppingList)
-        val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
+        var uShoppingLists: MutableList<ShoppingList> = mutableListOf()
+        if(user.shoppingLists != null){
+            uShoppingLists = user.shoppingLists as MutableList<ShoppingList>
+        }
         uShoppingLists.add(sl)
         user.shoppingLists = uShoppingLists
         userRepository.save(user)
@@ -29,23 +35,31 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
     }
 
     fun delete(shoppingList: ShoppingList){
-        val users: MutableList<User> = shoppingList.users as MutableList<User>
-        for(user in users){
-            val uLists = user.shoppingLists as MutableList<ShoppingList>
-            if(uLists.contains(shoppingList))
-                uLists.remove(shoppingList)
-            userRepository.save(user)
+        if(shoppingList.users != null){
+            val users: MutableList<User> = shoppingList.users as MutableList<User>
+            for(user in users){
+                val uLists = user.shoppingLists as MutableList<ShoppingList>
+                if(uLists.contains(shoppingList))
+                    uLists.remove(shoppingList)
+                userRepository.save(user)
+            }
         }
         val family = shoppingList.family
-        val fLists = family?.shoppingLists as MutableList<ShoppingList>
-        if(fLists.contains(shoppingList))
-            fLists.remove(shoppingList)
-        familyRepository.save(family)
+        if(family?.shoppingLists != null){
+            val fLists = family.shoppingLists as MutableList<ShoppingList>
+            if(fLists.contains(shoppingList))
+                fLists.remove(shoppingList)
+            familyRepository.save(family)
+        }
     }
 
     fun removeUser(shoppingListID: Int, userID: Int): ResponseEntity<Unit>{
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppingListID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        if(user.shoppingLists == null)
+            return ResponseEntity(HttpStatus.NOT_MODIFIED)
+        if(shoppingList.users == null)
+            return ResponseEntity(HttpStatus.NOT_MODIFIED)
         val users: MutableList<User> = shoppingList.users as MutableList<User>
         if(!users.contains(user))
             return ResponseEntity(HttpStatus.NOT_FOUND)
@@ -71,14 +85,20 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         return rSL
     }
 
-    fun byFamily(family: Family): MutableList<GetShoppingListDTO> {
-        val shoppingLists = family.shoppingLists as MutableList<ShoppingList>
-        return toDtoList(shoppingLists)
+    fun byFamily(family: Family): MutableList<GetShoppingListDTO>? {
+        if(family.shoppingLists != null){
+            val shoppingLists = family.shoppingLists as MutableList<ShoppingList>
+            return toDtoList(shoppingLists)
+        }
+        return null
     }
 
-    fun byUser(user: User): MutableList<GetShoppingListDTO>{
-        val shoppingLists = user.shoppingLists as MutableList<ShoppingList>
-        return toDtoList(shoppingLists)
+    fun byUser(user: User): MutableList<GetShoppingListDTO>? {
+        if (user.shoppingLists != null){
+            val shoppingLists = user.shoppingLists as MutableList<ShoppingList>
+            return toDtoList(shoppingLists)
+        }
+        return null
     }
 
     fun edit(shoppingList: ShoppingList, sl: ShoppingList): ShoppingList{

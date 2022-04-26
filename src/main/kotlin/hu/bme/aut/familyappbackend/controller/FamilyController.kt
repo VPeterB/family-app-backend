@@ -21,7 +21,7 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
     fun addUserToFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(familyService.addUser(family, user))
+        return ResponseEntity.ok(familyService.addUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
     }
 
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO kép // TODO backend picture bytearray-t vár --> meeting: MultipartFile
@@ -60,6 +60,6 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
     fun removeUserFromFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(familyService.removeUser(family, user))
+        return ResponseEntity.ok(familyService.removeUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
     }
 }

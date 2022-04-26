@@ -68,13 +68,13 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])
     fun getShoppingListsByFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
         val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(sLService.byFamily(family))
+        return ResponseEntity.ok(sLService.byFamily(family)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
     @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET])
     fun getShoppingListsByUser(@PathVariable("userID") userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(sLService.byUser(user))
+        return ResponseEntity.ok(sLService.byUser(user)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])

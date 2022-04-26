@@ -46,17 +46,21 @@ class UserService(private val userRepository: UserRepository, private val family
     fun delete(userID: Int): ResponseEntity<Unit>{
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family = user.family
-        val fUsers = family?.users as MutableList<User>
-        if(fUsers.contains(user))
-            fUsers.remove(user)
-        familyRepository.save(family)
+        if(family?.users != null){
+            val fUsers = family.users as MutableList<User>
+            if(fUsers.contains(user))
+                fUsers.remove(user)
+            familyRepository.save(family)
+        }
         val invite = user.invite
         if (invite != null) {
             inviteRepository.delete(invite)
         }
-        val uSLs = user.shoppingLists as MutableList<ShoppingList>
-        for(sl in uSLs){
-            shoppingListService.removeUser(sl.ID, user.ID)
+        if(user.shoppingLists != null){
+            val uSLs = user.shoppingLists as MutableList<ShoppingList>
+            for(sl in uSLs){
+                shoppingListService.removeUser(sl.ID, user.ID)
+            }
         }
         userRepository.delete(user)
         return ResponseEntity(HttpStatus.NO_CONTENT)
@@ -64,11 +68,30 @@ class UserService(private val userRepository: UserRepository, private val family
 
     fun invite (invite: CreateInviteDTO): ResponseEntity<Unit>{
         val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyByID(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND) // TODO régi törlés
+        val family: Family = familyRepository.findFamilyByID(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        if(user.invite != null){
+            inviteRepository.delete(user.invite!!)
+            if(family.invites != null){
+                val fInvites = family.invites as MutableList<Invite>
+                if(fInvites.contains(user.invite)){
+                    fInvites.remove(user.invite)
+                    family.invites = fInvites
+                    familyRepository.save(family)
+                }
+            }
+            user.invite = null
+        }
         val newInvite = Invite(0, family, user)
         val i = inviteRepository.save(newInvite)
         user.invite = i
         userRepository.save(user)
+        var fInvites = mutableListOf<Invite>()
+        if(family.invites != null) {
+            fInvites = family.invites as MutableList<Invite>
+        }
+        fInvites.add(i)
+        family.invites = fInvites
+        familyRepository.save(family)
         return ResponseEntity(HttpStatus.OK)
     }
 
