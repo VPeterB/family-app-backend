@@ -2,4 +2,4 @@
 
 Test users:
 
-URL:
+URL: https://family-app-kotlin-backend.herokuapp.com/api
