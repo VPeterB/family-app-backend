@@ -1,6 +1,7 @@
 package hu.bme.aut.familyappbackend.controller
 
 import hu.bme.aut.familyappbackend.dto.CreateShoppingListDTO
+import hu.bme.aut.familyappbackend.mapper.ShoppingItemMapper
 import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.ShoppingList
@@ -61,9 +62,12 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     fun getShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*> {
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
-        val shoppingListDto = shoppingListMapper.convertToDto(shoppingList)
-        return ResponseEntity.ok(shoppingListDto)
-    }
+        return ResponseEntity.ok(shoppingListMapper.convertToDto(shoppingList))
+    }/*
+    Expected :RemoteShoppingList(ID=21, name=Lidl, family=null, users=null, remoteShoppingItems=null)
+    Actual   :RemoteGetShoppingList(ID=0, name=Lidl, familyID=0, userIDs=[13], shoppingItemIDs=[])
+    ID = 0 ???
+    */
 
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])
     fun getShoppingListsByFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {

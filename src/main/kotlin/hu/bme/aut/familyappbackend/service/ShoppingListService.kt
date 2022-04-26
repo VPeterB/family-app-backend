@@ -101,10 +101,12 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         return null
     }
 
-    fun edit(shoppingList: ShoppingList, sl: ShoppingList): ShoppingList{
+    fun edit(shoppingList: ShoppingList, sl: ShoppingList): GetShoppingListDTO{
         shoppingList.users = sl.users
         shoppingList.family = sl.family
         shoppingList.shoppingItems = sl.shoppingItems
-        return shoppingListRepository.save(shoppingList)
+        val sL = shoppingListRepository.save(shoppingList)
+        val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
+        return shoppingListMapper.convertToDto(sL) // TODO végtelen dolgokat akar visszaadni: talán így jó
     }
 }

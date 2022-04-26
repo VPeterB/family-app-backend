@@ -36,7 +36,9 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(!shoppingItem.done){
             shoppingItem.done = true
-            return ResponseEntity.ok(shoppingItemRepository.save(shoppingItem))
+            val sI= shoppingItemRepository.save(shoppingItem)
+            val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI)) // TODO vegtelen megint: talán így jó
         }
         return ResponseEntity.badRequest().body(HttpStatus.NOT_MODIFIED)
     }
@@ -47,7 +49,9 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(shoppingItem.done){
             shoppingItem.done = false
-            return ResponseEntity.ok(shoppingItemRepository.save(shoppingItem))
+            val sI= shoppingItemRepository.save(shoppingItem)
+            val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI)) // TODO vegtelen megint: talán így jó
         }
         return ResponseEntity.badRequest().body(HttpStatus.NOT_MODIFIED)
     }
@@ -70,7 +74,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         return ResponseEntity.ok(shoppingItemService.byShoppingList(sList))
     }
 
-    @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET]) // TODO 1 idju get kéréshez 0 es idju itemet kapta: ?????
     fun getShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
     {
         val sItem: ShoppingItem = shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)

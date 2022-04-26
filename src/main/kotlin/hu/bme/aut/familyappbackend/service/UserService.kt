@@ -2,6 +2,8 @@ package hu.bme.aut.familyappbackend.service
 
 import hu.bme.aut.familyappbackend.dto.CreateInviteDTO
 import hu.bme.aut.familyappbackend.dto.CreateUserDTO
+import hu.bme.aut.familyappbackend.dto.GetUserDTO
+import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.Invite
 import hu.bme.aut.familyappbackend.model.ShoppingList
@@ -12,6 +14,7 @@ import hu.bme.aut.familyappbackend.repository.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -24,10 +27,12 @@ class UserService(private val userRepository: UserRepository, private val family
     private val passwordEncoder = BCryptPasswordEncoder()
     val secret: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512)
 
-    fun save(user: CreateUserDTO): User{
+    fun save(user: CreateUserDTO): GetUserDTO{
         val pw = this.passwordEncoder.encode(user.password)
         val newUser = User(0,user.email, pw)
-        return userRepository.save(newUser)
+        val us = userRepository.save(newUser)
+        val userMapper = Mappers.getMapper(UserMapper::class.java)
+        return userMapper.convertToDto(us)
     }
 
     fun comparePassword(pw: String, password: String): Boolean{
@@ -63,7 +68,7 @@ class UserService(private val userRepository: UserRepository, private val family
             }
         }
         userRepository.delete(user)
-        return ResponseEntity(HttpStatus.NO_CONTENT)
+        return ResponseEntity(HttpStatus.OK) //done no content -> ok
     }
 
     fun invite (invite: CreateInviteDTO): ResponseEntity<Unit>{
@@ -95,11 +100,13 @@ class UserService(private val userRepository: UserRepository, private val family
         return ResponseEntity(HttpStatus.OK)
     }
 
-    fun edit(user: User, u: User): User {
+    fun edit(user: User, u: User): GetUserDTO { // "ID":13 nagybetűvel talán segít // TODO UserID not match with the userE's id // https://family-app-kotlin-backend.herokuapp.com/api/user/13 // {"email":"newtest@email.hu","password":"Test1234","id":13}
         user.family = u.family
         user.invite = u.invite
         user.shoppingLists = u.shoppingLists
-        return userRepository.save(user)
+        val us = userRepository.save(user)
+        val userMapper = Mappers.getMapper(UserMapper::class.java)
+        return userMapper.convertToDto(us)
     }
 
 }

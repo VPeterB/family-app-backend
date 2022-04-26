@@ -36,9 +36,11 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
         }
     }
 
-    fun edit(shoppingItem: ShoppingItem, si: ShoppingItem): ShoppingItem {
+    fun edit(shoppingItem: ShoppingItem, si: ShoppingItem): GetShoppingItemDTO {
         shoppingItem.shoppingList = si.shoppingList
-        return shoppingItemRepository.save(shoppingItem)
+        val sI= shoppingItemRepository.save(shoppingItem)
+        val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+        return shoppingItemMapper.convertToDto(sI) // TODO vegtelen megint: talán így jó
     }
 
     fun byShoppingList(sList: ShoppingList): MutableList<GetShoppingItemDTO> {

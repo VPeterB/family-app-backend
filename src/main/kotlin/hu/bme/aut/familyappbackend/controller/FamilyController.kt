@@ -52,8 +52,7 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
     fun getFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
         val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
-        val familyDto = familyMapper.convertToDto(family)
-        return ResponseEntity.ok(familyDto)
+        return ResponseEntity.ok(familyMapper.convertToDto(family))
     }
 
     @RequestMapping(value = ["/{familyID}/removeuser"], method = [RequestMethod.PUT])
