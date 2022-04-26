@@ -41,7 +41,11 @@ class AuthenticationController(private val userService: UserService, private val
             .setIssuer(issuer)
             .setExpiration(Date(System.currentTimeMillis() + 60 * 24 * 1000)) // 1 day
             .signWith(SignatureAlgorithm.HS512, userService.secret).compact()
+<<<<<<< HEAD
         val cookie = Cookie("jwt", jwt) // TODO jwt cookie
+=======
+        val cookie = Cookie("jwt", jwt)
+>>>>>>> 5eaf7a7a56208a57c4924f38b895142fea4527f9
         cookie.isHttpOnly = true
         response.addCookie(cookie)
         return ResponseEntity.ok(HttpStatus.ACCEPTED)
