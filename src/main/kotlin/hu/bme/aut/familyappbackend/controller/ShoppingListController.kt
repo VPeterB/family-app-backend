@@ -66,7 +66,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     }/*
     Expected :RemoteShoppingList(ID=21, name=Lidl, family=null, users=null, remoteShoppingItems=null)
     Actual   :RemoteGetShoppingList(ID=0, name=Lidl, familyID=0, userIDs=[13], shoppingItemIDs=[])
-    ID = 0 ???
+    TODO nekem amugy jó
     */
 
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])

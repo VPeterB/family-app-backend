@@ -3,6 +3,7 @@ package hu.bme.aut.familyappbackend.service
 import hu.bme.aut.familyappbackend.dto.GetFamilyDTO
 import hu.bme.aut.familyappbackend.mapper.FamilyMapper
 import hu.bme.aut.familyappbackend.model.Family
+import hu.bme.aut.familyappbackend.model.Invite
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.InviteRepository
@@ -16,6 +17,10 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         val users = mutableListOf<User>()
         users.add(user)
         val f = familyRepository.save(Family(0, users))
+        f.invites = mutableListOf()
+        f.shoppingLists = mutableListOf()
+        user.family = f
+        userRepository.save(user)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return familyMapper.convertToDto(f) // TODO két fajta idt ad vissza id, ID // TODO aztán egy idő után infinite lista ez is, valami nagyon fura: talán majd így
     }
