@@ -16,10 +16,10 @@ data class Family (
     var users: List<User>? = null,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
-    val shoppingLists: List<ShoppingList>? = null,
+    var shoppingLists: List<ShoppingList>? = null,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
-    val invites: List<Invite>? = null
+    var invites: List<Invite>? = null
 )
 {
 }
