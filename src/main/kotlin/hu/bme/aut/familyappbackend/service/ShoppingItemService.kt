@@ -1,10 +1,13 @@
 package hu.bme.aut.familyappbackend.service
 
 import hu.bme.aut.familyappbackend.dto.CreateShoppingItemDTO
+import hu.bme.aut.familyappbackend.dto.GetShoppingItemDTO
+import hu.bme.aut.familyappbackend.mapper.ShoppingItemMapper
 import hu.bme.aut.familyappbackend.model.ShoppingItem
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
+import org.mapstruct.factory.Mappers
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,5 +29,21 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
             shoppingList.shoppingItems = lShoppingItems
             shoppingListRepository.save(shoppingList)
         }
+    }
+
+    fun edit(shoppingItem: ShoppingItem, si: ShoppingItem): ShoppingItem {
+        shoppingItem.shoppingList = si.shoppingList
+        return shoppingItemRepository.save(shoppingItem)
+    }
+
+    fun byShoppingList(sList: ShoppingList): MutableList<GetShoppingItemDTO> {
+        val rSIs = mutableListOf<GetShoppingItemDTO>()
+        val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+        val shoppingItems = sList.shoppingItems as MutableList<ShoppingItem>
+        for(si in shoppingItems){
+            val shoppingItemDTO = shoppingItemMapper.convertToDto(si)
+            rSIs.add(shoppingItemDTO)
+        }
+        return rSIs
     }
 }

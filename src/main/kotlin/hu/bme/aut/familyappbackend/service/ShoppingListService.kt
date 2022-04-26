@@ -1,10 +1,15 @@
 package hu.bme.aut.familyappbackend.service
 
+import hu.bme.aut.familyappbackend.dto.GetShoppingListDTO
+import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
+import hu.bme.aut.familyappbackend.mapper.UserMapper
+import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
+import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -54,5 +59,32 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         user.shoppingLists = uShoppingLists
         userRepository.save(user)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    fun toDtoList(sls: MutableList<ShoppingList>): MutableList<GetShoppingListDTO>{
+        val rSL = mutableListOf<GetShoppingListDTO>()
+        val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
+        for(sl in sls){
+            val shoppingListDTO = shoppingListMapper.convertToDto(sl)
+            rSL.add(shoppingListDTO)
+        }
+        return rSL
+    }
+
+    fun byFamily(family: Family): MutableList<GetShoppingListDTO> {
+        val shoppingLists = family.shoppingLists as MutableList<ShoppingList>
+        return toDtoList(shoppingLists)
+    }
+
+    fun byUser(user: User): MutableList<GetShoppingListDTO>{
+        val shoppingLists = user.shoppingLists as MutableList<ShoppingList>
+        return toDtoList(shoppingLists)
+    }
+
+    fun edit(shoppingList: ShoppingList, sl: ShoppingList): ShoppingList{
+        shoppingList.users = sl.users
+        shoppingList.family = sl.family
+        shoppingList.shoppingItems = sl.shoppingItems
+        return shoppingListRepository.save(shoppingList)
     }
 }

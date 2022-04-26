@@ -58,4 +58,11 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         userRepository.save(user)
         return f
     }
+
+    fun edit(family: Family, f: Family): Family {
+        family.users = f.users
+        family.invites = f.invites
+        family.shoppingLists = f.shoppingLists
+        return familyRepository.save(family)
+    }
 }

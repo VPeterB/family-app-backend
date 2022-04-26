@@ -24,8 +24,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         return ResponseEntity.ok(familyService.addUser(family, user))
     }
 
-    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth user + kép // TODO backend picture bytearray-t vár --> meeting: MultipartFile
-    fun createFamily(@RequestHeader jwt: String?, @Valid @RequestBody(required = false) picture: MultipartFile?): ResponseEntity<*> {
+    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO kép // TODO backend picture bytearray-t vár --> meeting: MultipartFile
+    fun createFamily(@CookieValue("jwt") jwt: String?, @Valid @RequestBody(required = false) picture: MultipartFile?): ResponseEntity<*> {
         if(jwt == null){
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
@@ -41,11 +41,11 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.PUT])
     fun editFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody family: Family): ResponseEntity<*> {
-        familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (familyID != family.ID) {
             return ResponseEntity.badRequest().body("FamilyID not match with the familyE's id")
         }
-        return ResponseEntity.ok(familyRepository.save(family))
+        val f = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        return ResponseEntity.ok(familyService.edit(family, f))
     }
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.GET])

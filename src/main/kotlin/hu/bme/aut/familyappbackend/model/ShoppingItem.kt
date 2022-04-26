@@ -20,5 +20,5 @@ data class ShoppingItem(
 
     @ManyToOne
     @JoinColumn(name = "shoppinglist")
-    val shoppingList: ShoppingList?  = null
+    var shoppingList: ShoppingList?  = null
 )

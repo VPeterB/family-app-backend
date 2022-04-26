@@ -1,9 +1,7 @@
 package hu.bme.aut.familyappbackend.controller
 
 import hu.bme.aut.familyappbackend.dto.CreateShoppingListDTO
-import hu.bme.aut.familyappbackend.mapper.FamilyMapper
 import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
-import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.model.User
@@ -29,8 +27,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         return ResponseEntity(HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO auth -> meeting nem elég aoth0 kell a jwt, mert auth0 az a saját bejelentkezési rendszere alapján ellenőriz és ad hozzáférést az api végpontokhoz, az adatbázisban lévő saját(nem auth0) felhasználókhoz nem ad tokent
-    fun createShoppingList(@RequestHeader jwt: String?, @Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<*> {
+    @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
+    fun createShoppingList(@CookieValue("jwt") jwt: String?, @Valid @RequestBody shoppinglistcreate: CreateShoppingListDTO): ResponseEntity<*> {
         if(jwt == null){
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
@@ -50,13 +48,13 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         return ResponseEntity.ok(sLService.delete(sl))
     }
 
-    @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT]) // név változtatásra, kötött adatokat nem kezel
+    @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT])
     fun editShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppinglist: ShoppingList): ResponseEntity<*> {
-        shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (shoppinglistID != shoppinglist.ID) {
             return ResponseEntity.badRequest().body("ShoppingListID not match with the shoppingListE's id")
         }
-        return ResponseEntity.ok(shoppingListRepository.save(shoppinglist))
+        val sl = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        return ResponseEntity.ok(sLService.edit(shoppinglist, sl))
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.GET])
@@ -70,19 +68,13 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])
     fun getShoppingListsByFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
         val family: Family = familyRepository.findFamilyByID(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
-        val familyDto = familyMapper.convertToDto(family)
-        val shoppingListIDs = familyDto.shoppingListIDs
-        return ResponseEntity.ok(shoppingListIDs) // TODO backend más: kell a dto lista vagy elég így az id lista? meeting
+        return ResponseEntity.ok(sLService.byFamily(family))
     }
 
-    @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET]) //DONE backend missing
+    @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET])
     fun getShoppingListsByUser(@PathVariable("userID") userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        val userMapper = Mappers.getMapper(UserMapper::class.java)
-        val userDto = userMapper.convertToDto(user)
-        val shoppingListIDs = userDto.shoppingListIDs
-        return ResponseEntity.ok(shoppingListIDs) // TODO backend más: kell a dto lista vagy elég így az id lista? meeting
+        return ResponseEntity.ok(sLService.byUser(user))
     }
 
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])

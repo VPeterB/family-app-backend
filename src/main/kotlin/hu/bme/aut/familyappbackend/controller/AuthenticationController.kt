@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api")
 class AuthenticationController(private val userService: UserService, private val userRepository: UserRepository) {
-
-
 
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
     fun regUser(@Valid @RequestBody regUser: CreateUserDTO): ResponseEntity<*>? {
@@ -41,12 +40,10 @@ class AuthenticationController(private val userService: UserService, private val
         val jwt = Jwts.builder()
             .setIssuer(issuer)
             .setExpiration(Date(System.currentTimeMillis() + 60 * 24 * 1000)) // 1 day
-            .signWith(SignatureAlgorithm.ES512, "secret").compact()
-        /*val cookie = Cookie("jwt", jwt) // TODO jwt cookie
+            .signWith(SignatureAlgorithm.ES512, userService.secret).compact()
+        val cookie = Cookie("jwt", jwt) // TODO jwt cookie
         cookie.isHttpOnly = true
         response.addCookie(cookie)
-        return ResponseEntity.ok("success")*/
-        return ResponseEntity.ok(jwt)
+        return ResponseEntity.ok(HttpStatus.ACCEPTED)
     }
-    //TODO JWT: cookie mobilon mennyire kezelhető? , Auth0?
 }

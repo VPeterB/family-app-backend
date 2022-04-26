@@ -3,10 +3,8 @@ package hu.bme.aut.familyappbackend.controller
 import hu.bme.aut.familyappbackend.dto.CreateInviteDTO
 import hu.bme.aut.familyappbackend.mapper.InviteMapper
 import hu.bme.aut.familyappbackend.mapper.UserMapper
-import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.Invite
 import hu.bme.aut.familyappbackend.model.User
-import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.InviteRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import hu.bme.aut.familyappbackend.service.UserService
@@ -27,11 +25,11 @@ class UserController (private val userRepository: UserRepository, private val in
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.PUT])
     fun editUser(@PathVariable("userID") userID: Int, @Valid @RequestBody(required = true) userE: User): ResponseEntity<*> {
-        userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         if (userID != userE.ID) {
             return ResponseEntity.badRequest().body("UserID not match with the userE's id")
         }
-        return ResponseEntity.ok(userRepository.save(userE))
+        val u = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        return ResponseEntity.ok(userService.edit(userE, u))
     }
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.GET])
@@ -47,7 +45,7 @@ class UserController (private val userRepository: UserRepository, private val in
         return userService.invite(invite)
     }
 
-    @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET]) //DONE ilyen fgv nincs + inviteDTO + inviteMapper
+    @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
     fun getUserInvite( @PathVariable("userID") userID: Int): ResponseEntity<*> {
         val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         val inviteId = user.invite?.ID

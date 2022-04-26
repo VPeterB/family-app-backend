@@ -2,12 +2,8 @@ package hu.bme.aut.familyappbackend.controller
 
 import hu.bme.aut.familyappbackend.dto.CreateShoppingItemDTO
 import hu.bme.aut.familyappbackend.mapper.ShoppingItemMapper
-import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
-import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.ShoppingItem
 import hu.bme.aut.familyappbackend.model.ShoppingList
-import hu.bme.aut.familyappbackend.model.User
-import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.service.ShoppingItemService
@@ -24,7 +20,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
     {
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).ID) //id visszaküldése <- //DONE backend visszaadja e az id-t
+        return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).ID)
     }
 
     @RequestMapping( value = ["/{shoppingitemID}"], method = [RequestMethod.DELETE])
@@ -60,20 +56,18 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     fun editShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int,
                          @Valid @RequestBody shoppingitem: ShoppingItem): ResponseEntity<*>
     {
-        shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if (shoppingitemID != shoppingitem.ID) {
             return ResponseEntity.badRequest().body("ShoppingItemID not match with the shoppingItemE's id")
         }
-        return ResponseEntity.ok(shoppingItemRepository.save(shoppingitem))
+        val si = shoppingItemRepository.findShoppingItemByID(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        return ResponseEntity.ok(shoppingItemService.edit(shoppingitem, si))
     }
 
     @RequestMapping(value = ["/all"], method = [RequestMethod.GET])
     fun getAllShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
     {
         val sList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        val sListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
-        val sListDto = sListMapper.convertToDto(sList)
-        return ResponseEntity.ok(sListDto.shoppingItemIDs)  // TODO backend más: kell a dto lista vagy elég így az id lista?
+        return ResponseEntity.ok(shoppingItemService.byShoppingList(sList))
     }
 
     @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET])
