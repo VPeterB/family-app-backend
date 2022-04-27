@@ -12,13 +12,13 @@ data class Family (
     @field:JsonProperty("id", required = true)
     val id: Int,
 
-    @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var users: List<User>? = null,
 
-    @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var shoppingLists: List<ShoppingList>? = null,
 
-    @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var invites: List<Invite>? = null
 )
 {

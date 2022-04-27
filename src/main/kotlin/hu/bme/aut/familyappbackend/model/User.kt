@@ -35,11 +35,11 @@ data class User(
     @JoinColumn(name = "family")
     var family: Family? = null,
 
-    @OneToOne(cascade = [CascadeType.ALL])
+    @OneToOne(cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "invite")
     var invite: Invite? = null,
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "user_shoppinglist",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "ID")],
