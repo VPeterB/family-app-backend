@@ -36,7 +36,7 @@ class AuthenticationController(private val userService: UserService, private val
         if(!userService.comparePassword(user.password, userL.password)){
             return ResponseEntity.badRequest().body("Wrong email or password")
         }
-        val issuer = user.ID.toString()
+        val issuer = user.id.toString()
         val jwt = Jwts.builder()
             .setIssuer(issuer)
             .setExpiration(Date(System.currentTimeMillis() + 60 * 24 * 1000)) // 1 day

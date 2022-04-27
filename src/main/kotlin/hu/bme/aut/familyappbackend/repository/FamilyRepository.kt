@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface FamilyRepository : CrudRepository<Family, Int> {
-    fun findFamilyByID(ID: Int): Family?
+    fun findFamilyById(id: Int): Family?
 }

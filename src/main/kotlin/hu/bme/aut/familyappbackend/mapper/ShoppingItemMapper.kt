@@ -14,6 +14,6 @@ abstract class ShoppingItemMapper {
 
     @AfterMapping
     fun getId(@MappingTarget target: GetShoppingItemDTO, source: ShoppingItem){
-        target.shoppingListID = source.shoppingList?.ID
+        target.shoppingListID = source.shoppingList?.id
     }
 }

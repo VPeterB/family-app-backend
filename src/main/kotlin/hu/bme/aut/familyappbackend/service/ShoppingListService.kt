@@ -2,7 +2,6 @@ package hu.bme.aut.familyappbackend.service
 
 import hu.bme.aut.familyappbackend.dto.GetShoppingListDTO
 import hu.bme.aut.familyappbackend.mapper.ShoppingListMapper
-import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.model.User
@@ -54,8 +53,8 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
     }
 
     fun removeUser(shoppingListID: Int, userID: Int): ResponseEntity<Unit>{
-        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListByID(shoppingListID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppingListID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         if(user.shoppingLists == null)
             return ResponseEntity(HttpStatus.NOT_MODIFIED)
         if(shoppingList.users == null)

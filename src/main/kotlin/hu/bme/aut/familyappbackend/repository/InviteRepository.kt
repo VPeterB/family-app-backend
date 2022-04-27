@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface InviteRepository : CrudRepository<Invite, Int> {
-    fun findInviteByID(ID: Int): Invite?
+    fun findInviteById(id: Int): Invite?
 }

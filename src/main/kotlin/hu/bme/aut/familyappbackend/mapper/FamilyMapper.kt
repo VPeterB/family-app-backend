@@ -18,13 +18,13 @@ abstract class FamilyMapper {
         val userIDS: MutableList<Int> = mutableListOf()
         val inviteIDS: MutableList<Int> = mutableListOf()
         for (shoppingList in source.shoppingLists!!){
-            shoppingIDS.add(shoppingList.ID)
+            shoppingIDS.add(shoppingList.id)
         }
         for (invite in source.invites!!){
-            inviteIDS.add(invite.ID)
+            inviteIDS.add(invite.id)
         }
         for (user in source.users!!){
-            userIDS.add(user.ID)
+            userIDS.add(user.id)
         }
         target.userIDs = userIDS
         target.inviteIDs = inviteIDS

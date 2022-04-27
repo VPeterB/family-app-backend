@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ShoppingItemRepository : CrudRepository<ShoppingItem, Int> {
-    fun findShoppingItemByID(ID: Int): ShoppingItem?
+    fun findShoppingItemById(id: Int): ShoppingItem?
 }

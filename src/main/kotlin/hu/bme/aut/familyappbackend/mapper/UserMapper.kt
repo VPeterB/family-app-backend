@@ -13,11 +13,11 @@ abstract class UserMapper {
 
     @AfterMapping
     fun getId(@MappingTarget target:GetUserDTO, source:User){
-        target.familyID = source.family?.ID
-        target.inviteID = source.invite?.ID
+        target.familyID = source.family?.id
+        target.inviteID = source.invite?.id
         val shoppingIDS: MutableList<Int> = mutableListOf()
         for (shoppingList in source.shoppingLists!!){
-            shoppingIDS.add(shoppingList.ID)
+            shoppingIDS.add(shoppingList.id)
         }
         target.shoppingListIDs = shoppingIDS
     }

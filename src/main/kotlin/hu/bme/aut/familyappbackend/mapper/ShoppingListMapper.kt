@@ -17,13 +17,13 @@ abstract class ShoppingListMapper {
         val shoppingItemIDS: MutableList<Int> = mutableListOf()
         val userIDS: MutableList<Int> = mutableListOf()
         for (shoppingItem in source.shoppingItems!!){
-            shoppingItemIDS.add(shoppingItem.ID)
+            shoppingItemIDS.add(shoppingItem.id)
         }
         for (user in source.users!!){
-            userIDS.add(user.ID)
+            userIDS.add(user.id)
         }
         target.shoppingItemIDs = shoppingItemIDS
         target.userIDs = userIDS
-        target.familyID = source.family?.ID
+        target.familyID = source.family?.id
     }
 }

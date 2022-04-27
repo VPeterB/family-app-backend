@@ -43,14 +43,14 @@ class UserService(private val userRepository: UserRepository, private val family
     fun getUserByJWT(jwt: String?): User? {
         return try{
             val body = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).body
-            userRepository.findUserByID(body.issuer.toInt())
+            userRepository.findUserById(body.issuer.toInt())
         }catch (e: Exception){
             null
         }
     }
     
     fun delete(userID: Int): ResponseEntity<Unit>{
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family = user.family
         if(family?.users != null){
             val fUsers = family.users as MutableList<User>
@@ -65,7 +65,7 @@ class UserService(private val userRepository: UserRepository, private val family
         if(user.shoppingLists != null){
             val uSLs = user.shoppingLists as MutableList<ShoppingList>
             for(sl in uSLs){
-                shoppingListService.removeUser(sl.ID, user.ID)
+                shoppingListService.removeUser(sl.id, user.id)
             }
         }
         userRepository.delete(user)
@@ -74,7 +74,7 @@ class UserService(private val userRepository: UserRepository, private val family
 
     fun invite (invite: CreateInviteDTO): ResponseEntity<Unit>{
         val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyByID(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyById(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         if(user.invite != null){
             inviteRepository.delete(user.invite!!)
             if(family.invites != null){

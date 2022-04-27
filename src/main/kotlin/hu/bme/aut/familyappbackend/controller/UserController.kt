@@ -25,16 +25,16 @@ class UserController (private val userRepository: UserRepository, private val in
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.PUT])
     fun editUser(@PathVariable("userID") userID: Int, @Valid @RequestBody(required = true) userE: User): ResponseEntity<*> {
-        if (userID != userE.ID) {
+        if (userID != userE.id) {
             return ResponseEntity.badRequest().body("UserID not match with the userE's id")
         }
-        val u = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val u = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(userService.edit(userE, u))
     }
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.GET])
     fun getUser( @PathVariable("userID") userID: Int): ResponseEntity<*> {
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         val userDto = userMapper.convertToDto(user)
         return ResponseEntity.ok(userDto)
@@ -47,10 +47,10 @@ class UserController (private val userRepository: UserRepository, private val in
 
     @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
     fun getUserInvite( @PathVariable("userID") userID: Int): ResponseEntity<*> {
-        val user: User = userRepository.findUserByID(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
-        val inviteId = user.invite?.ID
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val inviteId = user.invite?.id
         if(inviteId != null){
-            val invite: Invite = inviteRepository.findInviteByID(inviteId)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+            val invite: Invite = inviteRepository.findInviteById(inviteId)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
             val inviteMapper = Mappers.getMapper(InviteMapper::class.java)
             val inviteDto = inviteMapper.convertToDto(invite)
             return ResponseEntity.ok(inviteDto)

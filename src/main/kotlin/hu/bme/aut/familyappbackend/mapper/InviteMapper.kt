@@ -12,7 +12,7 @@ abstract class InviteMapper {
 
     @AfterMapping
     fun getId(@MappingTarget target: GetInviteDTO, source: Invite) {
-        target.familyID = source.family?.ID
-        target.userID = source.user?.ID
+        target.familyID = source.family?.id
+        target.userID = source.user?.id
     }
 }
