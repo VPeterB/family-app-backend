@@ -30,6 +30,7 @@ class UserService(private val userRepository: UserRepository, private val family
     fun save(user: CreateUserDTO): GetUserDTO{
         val pw = this.passwordEncoder.encode(user.password)
         val newUser = User(0,user.email, pw)
+        newUser.shoppingLists = mutableListOf()
         val us = userRepository.save(newUser)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)
