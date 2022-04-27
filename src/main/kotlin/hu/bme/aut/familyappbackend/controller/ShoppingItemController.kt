@@ -17,22 +17,31 @@ import javax.validation.Valid
 @RequestMapping("/api/shoppinglist/{shoppinglistID}/shoppingitem")
 class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository, private val shoppingItemService: ShoppingItemService){
     @RequestMapping(value = ["/add"], method = [RequestMethod.POST])
-    fun addShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
+    fun addShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppingitem: CreateShoppingItemDTO): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).id)
     }
 
     @RequestMapping( value = ["/{shoppingitemID}"], method = [RequestMethod.DELETE])
-    fun deleteShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit>
+    fun deleteShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit>
     {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         val si: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(shoppingItemService.delete(si))
     }
 
     @RequestMapping(value = ["/{shoppingitemID}/done"], method = [RequestMethod.PUT])
-    fun doneShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @PathVariable("shoppingitemID") shoppingitemID: Int): ResponseEntity<*>
+    fun doneShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @PathVariable("shoppingitemID") shoppingitemID: Int): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(!shoppingItem.done){
             shoppingItem.done = true
@@ -44,22 +53,28 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     }
 
     @RequestMapping(value = ["/{shoppingitemID}/undone"], method = [RequestMethod.PUT])
-    fun undoneShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int, @PathVariable("shoppingitemID") shoppingitemID: Int): ResponseEntity<*>
+    fun undoneShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @PathVariable("shoppingitemID") shoppingitemID: Int): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(shoppingItem.done){
             shoppingItem.done = false
             val sI= shoppingItemRepository.save(shoppingItem)
             val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
-            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI)) // TODO vegtelen megint: talán így jó
+            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI))
         }
         return ResponseEntity.badRequest().body(HttpStatus.NOT_MODIFIED)
     }
 
     @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.PUT])
-    fun editShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int,
+    fun editShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int,
                          @Valid @RequestBody shoppingitem: ShoppingItem): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         if (shoppingitemID != shoppingitem.id) {
             return ResponseEntity.badRequest().body("ShoppingItemID not match with the shoppingItemE's id")
         }
@@ -68,15 +83,21 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     }
 
     @RequestMapping(value = ["/all"], method = [RequestMethod.GET])
-    fun getAllShoppingItem(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
+    fun getAllShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val sList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(shoppingItemService.byShoppingList(sList))
     }
 
-    @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET]) // TODO 1 idju get kéréshez 0 es idju itemet kapta: ?????
-    fun getShoppingItem(@PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
+    @RequestMapping(value = ["/{shoppingitemID}"], method = [RequestMethod.GET])
+    fun getShoppingItem(@CookieValue("jwt") jwt: String?, @PathVariable("shoppingitemID") shoppingitemID: Int, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*>
     {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val sItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val sItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
         val sItemDto = sItemMapper.convertToDto(sItem)

@@ -20,7 +20,10 @@ import javax.validation.Valid
 @RequestMapping("/api/shoppinglist")
 class ShoppingListController (private val shoppingListRepository: ShoppingListRepository, private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val userService: UserService, private val sLService: ShoppingListService) {
     @RequestMapping(value = ["/{shoppinglistID}/adduser"], method = [RequestMethod.PUT])
-    fun addUserToShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+    fun addUserToShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         sLService.addUser(shoppingList, user)
@@ -43,13 +46,19 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.DELETE])
-    fun deleteShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit> {
+    fun deleteShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<Unit> {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         val sl: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(sLService.delete(sl))
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.PUT])
-    fun editShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppinglist: ShoppingList): ResponseEntity<*> {
+    fun editShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody shoppinglist: ShoppingList): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         if (shoppinglistID != shoppinglist.id) {
             return ResponseEntity.badRequest().body("ShoppingListID not match with the shoppingListE's id")
         }
@@ -58,31 +67,38 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     }
 
     @RequestMapping(value = ["/{shoppinglistID}"], method = [RequestMethod.GET])
-    fun getShoppingList(@PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*> {
+    fun getShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         return ResponseEntity.ok(shoppingListMapper.convertToDto(shoppingList))
-    }/*
-    Expected :RemoteShoppingList(ID=21, name=Lidl, family=null, users=null, remoteShoppingItems=null)
-    Actual   :RemoteGetShoppingList(ID=0, name=Lidl, familyID=0, userIDs=[13], shoppingItemIDs=[])
-    TODO nekem amugy jó
-    */
+    }
 
     @RequestMapping(value = ["/byfamily/{familyID}"], method = [RequestMethod.GET])
-    fun getShoppingListsByFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
+    fun getShoppingListsByFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(sLService.byFamily(family)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
     @RequestMapping(value = ["/byuser/{userID}"], method = [RequestMethod.GET])
-    fun getShoppingListsByUser(@PathVariable("userID") userID: Int): ResponseEntity<*> {
+    fun getShoppingListsByUser(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(sLService.byUser(user)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
     @RequestMapping(value = ["/{shoppinglistID}/removeuser"], method = [RequestMethod.PUT])
-    fun removeUserFromShoppingList(
-        @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+    fun removeUserFromShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         return sLService.removeUser(shoppinglistID, userID)
     }
 }

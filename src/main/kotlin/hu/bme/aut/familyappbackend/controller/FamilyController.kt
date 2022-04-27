@@ -18,7 +18,10 @@ import javax.validation.Valid
 @RequestMapping("/api/family")
 class FamilyController (private val familyRepository: FamilyRepository, private val familyService: FamilyService, private val userRepository: UserRepository, private val userService: UserService) {
     @RequestMapping(value = ["/{familyID}/adduser"],method = [RequestMethod.PUT])
-    fun addUserToFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
+    fun addUserToFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(familyService.addUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
@@ -34,13 +37,16 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
     }
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.DELETE])
-    fun deleteFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<Unit> {
+    fun deleteFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int): ResponseEntity<Unit> {
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(familyService.delete(family))
     }
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.PUT])
-    fun editFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody family: Family): ResponseEntity<*> {
+    fun editFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int, @Valid @RequestBody family: Family): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         if (familyID != family.id) {
             return ResponseEntity.badRequest().body("FamilyID not match with the familyE's id")
         }
@@ -49,14 +55,20 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
     }
 
     @RequestMapping(value = ["/{familyID}"], method = [RequestMethod.GET])
-    fun getFamily(@PathVariable("familyID") familyID: Int): ResponseEntity<*> {
+    fun getFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return ResponseEntity.ok(familyMapper.convertToDto(family))
     }
 
     @RequestMapping(value = ["/{familyID}/removeuser"], method = [RequestMethod.PUT])
-    fun removeUserFromFamily(@PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
+    fun removeUserFromFamily(@CookieValue("jwt") jwt: String?, @PathVariable("familyID") familyID: Int, @Valid @RequestBody userID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(familyService.removeUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))

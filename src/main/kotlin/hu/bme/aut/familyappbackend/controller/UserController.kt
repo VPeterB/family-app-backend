@@ -19,12 +19,18 @@ import javax.validation.Valid
 @RequestMapping("/api/user")
 class UserController (private val userRepository: UserRepository, private val inviteRepository: InviteRepository, private val userService: UserService){
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.DELETE])
-    fun deleteUser(@PathVariable("userID") userID: Int): ResponseEntity<Unit> {
+    fun deleteUser(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int): ResponseEntity<Unit> {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         return userService.delete(userID)
     }
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.PUT])
-    fun editUser(@PathVariable("userID") userID: Int, @Valid @RequestBody(required = true) userE: User): ResponseEntity<*> {
+    fun editUser(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int, @Valid @RequestBody(required = true) userE: User): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         if (userID != userE.id) {
             return ResponseEntity.badRequest().body("UserID not match with the userE's id")
         }
@@ -33,7 +39,10 @@ class UserController (private val userRepository: UserRepository, private val in
     }
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.GET])
-    fun getUser( @PathVariable("userID") userID: Int): ResponseEntity<*> {
+    fun getUser(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         val userDto = userMapper.convertToDto(user)
@@ -41,12 +50,18 @@ class UserController (private val userRepository: UserRepository, private val in
     }
 
     @RequestMapping(value = ["/sendinvite"], method = [RequestMethod.PUT])
-    fun inviteUser( @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<Unit> {
+    fun inviteUser(@CookieValue("jwt") jwt: String?,  @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<Unit> {
+        if(jwt == null){
+            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
         return userService.invite(invite)
     }
 
     @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
-    fun getUserInvite( @PathVariable("userID") userID: Int): ResponseEntity<*> {
+    fun getUserInvite(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int): ResponseEntity<*> {
+        if(jwt == null){
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
         val inviteId = user.invite?.id
         if(inviteId != null){
