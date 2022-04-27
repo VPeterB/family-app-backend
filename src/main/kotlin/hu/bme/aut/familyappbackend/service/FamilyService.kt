@@ -57,7 +57,7 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
                 inviteRepository.delete(invite)
             }
         }
-        familyRepository.delete(family)
+        // familyRepository.delete(family)
     }
 
     fun removeUser(family: Family, user: User): GetFamilyDTO? {
