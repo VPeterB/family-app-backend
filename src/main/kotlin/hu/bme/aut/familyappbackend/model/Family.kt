@@ -9,7 +9,7 @@ data class Family (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, updatable = false)
-    @field:JsonProperty("ID", required = true)
+    @field:JsonProperty("id", required = true)
     val id: Int,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
