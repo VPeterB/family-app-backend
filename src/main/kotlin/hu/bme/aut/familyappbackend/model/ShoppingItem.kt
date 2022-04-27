@@ -10,7 +10,7 @@ data class ShoppingItem(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, updatable = false)
     @field:JsonProperty("ID", required = true)
-    val ID: Int,
+    val id: Int,
 
     @Column(name = "name", nullable = false)
     val name: String,

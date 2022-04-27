@@ -9,7 +9,7 @@ data class ShoppingList(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, updatable = false)
-    val ID: Int,
+    val id: Int,
 
     @Column(name = "name", nullable = false)
     val name: String,

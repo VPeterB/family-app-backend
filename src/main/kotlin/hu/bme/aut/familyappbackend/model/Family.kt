@@ -10,7 +10,7 @@ data class Family (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, updatable = false)
     @field:JsonProperty("ID", required = true)
-    val ID: Int,
+    val id: Int,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
     var users: List<User>? = null,

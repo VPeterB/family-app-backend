@@ -9,7 +9,7 @@ data class Invite(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, updatable = false)
-    val ID: Int,
+    val id: Int,
 
     @ManyToOne
     @JoinColumn(name = "family")

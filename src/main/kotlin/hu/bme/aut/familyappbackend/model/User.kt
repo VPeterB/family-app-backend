@@ -8,7 +8,7 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false)
-    val ID: Int,
+    val id: Int,
 
     @Column(name = "email", nullable = false)
     var email: String,
