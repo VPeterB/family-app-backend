@@ -7,22 +7,23 @@ import hu.bme.aut.familyappbackend.model.Invite
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.InviteRepository
+import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import org.mapstruct.factory.Mappers
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
-class FamilyService (private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val inviteRepository: InviteRepository) {
+class FamilyService (private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository) {
     fun save (user: User): GetFamilyDTO {
         val users = mutableListOf<User>()
         users.add(user)
-        val f = familyRepository.save(Family(0, users))
-        f.invites = mutableListOf()
-        f.shoppingLists = mutableListOf()
+        val f = familyRepository.save(Family(0, Date(System.currentTimeMillis()), users, mutableListOf(), mutableListOf()))
         user.family = f
+        user.lastModTime = Date(System.currentTimeMillis())
         userRepository.save(user)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
-        return familyMapper.convertToDto(f) // TODO két fajta idt ad vissza id, ID // TODO aztán egy idő után infinite lista ez is, valami nagyon fura: talán majd így
+        return familyMapper.convertToDto(f)
     }
 
     fun addUser(family: Family, user: User): GetFamilyDTO? {
@@ -31,8 +32,10 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         val fUsers: MutableList<User> = family.users as MutableList<User>
         fUsers.add(user)
         family.users = fUsers
+        family.lastModTime = Date(System.currentTimeMillis())
         val f = familyRepository.save(family)
         user.family = f
+        user.lastModTime = Date(System.currentTimeMillis())
         userRepository.save(user)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return familyMapper.convertToDto(f)
@@ -43,20 +46,26 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         if (fUsers != null) {
             for(user in fUsers){
                 user.family = null
+                user.lastModTime = Date(System.currentTimeMillis())
+                userRepository.save(user)
             }
         }
         val fSLs = family.shoppingLists
         if (fSLs != null) {
             for(sl in fSLs){
                 sl.family = null
+                sl.lastModTime = Date(System.currentTimeMillis())
+                shoppingListRepository.save(sl)
             }
         }
         val fInvites = family.invites
         if (fInvites != null) {
             for(invite in fInvites){
+                invite.lastModTime = Date(System.currentTimeMillis())
                 inviteRepository.delete(invite)
             }
         }
+        family.lastModTime = Date(System.currentTimeMillis())
         familyRepository.delete(family)
     }
 
@@ -69,8 +78,10 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
             users.remove(user)
             family.users = users
         }
+        family.lastModTime = Date(System.currentTimeMillis())
         val f = familyRepository.save(family)
         user.family = null
+        user.lastModTime = Date(System.currentTimeMillis())
         userRepository.save(user)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return familyMapper.convertToDto(f)
@@ -80,6 +91,7 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         family.users = f.users
         family.invites = f.invites
         family.shoppingLists = f.shoppingLists
+        family.lastModTime = Date(System.currentTimeMillis())
         val fam = familyRepository.save(family)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return familyMapper.convertToDto(fam)

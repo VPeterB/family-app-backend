@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -37,6 +38,7 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         }
         val user = userService.getUserByJWT(jwt)?: return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val newSL = ShoppingList(0, shoppinglistcreate.name)
+        newSL.lastModTime = Date(System.currentTimeMillis())
         if(shoppinglistcreate.familyID != null){
             val family: Family = familyRepository.findFamilyById(shoppinglistcreate.familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
             newSL.family = family

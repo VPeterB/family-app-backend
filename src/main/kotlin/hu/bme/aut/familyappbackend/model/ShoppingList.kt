@@ -1,6 +1,7 @@
 package hu.bme.aut.familyappbackend.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -13,6 +14,9 @@ data class ShoppingList(
 
     @Column(name = "name", nullable = false)
     val name: String,
+
+    @Column(name = "lastModTime")
+    var lastModTime: Date? = null,
 
     @ManyToOne
     @JoinColumn(name = "family")

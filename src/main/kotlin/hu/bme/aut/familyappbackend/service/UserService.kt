@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.crypto.SecretKey
 
 @Service
@@ -31,6 +32,7 @@ class UserService(private val userRepository: UserRepository, private val family
         val pw = this.passwordEncoder.encode(user.password)
         val newUser = User(0,user.email, pw)
         newUser.shoppingLists = mutableListOf()
+        newUser.lastModTime = Date(System.currentTimeMillis())
         val us = userRepository.save(newUser)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)
@@ -56,10 +58,12 @@ class UserService(private val userRepository: UserRepository, private val family
             val fUsers = family.users as MutableList<User>
             if(fUsers.contains(user))
                 fUsers.remove(user)
+            family.lastModTime = Date(System.currentTimeMillis())
             familyRepository.save(family)
         }
         val invite = user.invite
         if (invite != null) {
+            invite.lastModTime = Date(System.currentTimeMillis())
             inviteRepository.delete(invite)
         }
         if(user.shoppingLists != null){
@@ -68,28 +72,33 @@ class UserService(private val userRepository: UserRepository, private val family
                 shoppingListService.removeUser(sl.id, user.id)
             }
         }
+        user.lastModTime = Date(System.currentTimeMillis())
         userRepository.delete(user)
-        return ResponseEntity(HttpStatus.OK) //done no content -> ok
+        return ResponseEntity(HttpStatus.OK)
     }
 
     fun invite (invite: CreateInviteDTO): ResponseEntity<Unit>{
         val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyById(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         if(user.invite != null){
+            user.invite!!.lastModTime = Date(System.currentTimeMillis())
             inviteRepository.delete(user.invite!!)
             if(family.invites != null){
                 val fInvites = family.invites as MutableList<Invite>
                 if(fInvites.contains(user.invite)){
                     fInvites.remove(user.invite)
                     family.invites = fInvites
+                    family.lastModTime = Date(System.currentTimeMillis())
                     familyRepository.save(family)
                 }
             }
             user.invite = null
+            user.lastModTime = Date(System.currentTimeMillis())
         }
-        val newInvite = Invite(0, family, user)
+        val newInvite = Invite(0, Date(System.currentTimeMillis()), family, user)
         val i = inviteRepository.save(newInvite)
         user.invite = i
+        user.lastModTime = Date(System.currentTimeMillis())
         userRepository.save(user)
         var fInvites = mutableListOf<Invite>()
         if(family.invites != null) {
@@ -97,14 +106,16 @@ class UserService(private val userRepository: UserRepository, private val family
         }
         fInvites.add(i)
         family.invites = fInvites
+        family.lastModTime = Date(System.currentTimeMillis())
         familyRepository.save(family)
         return ResponseEntity(HttpStatus.OK)
     }
 
-    fun edit(user: User, u: User): GetUserDTO { // "ID":13 nagybetűvel talán segít // TODO UserID not match with the userE's id // https://family-app-kotlin-backend.herokuapp.com/api/user/13 // {"email":"newtest@email.hu","password":"Test1234","id":13}
+    fun edit(user: User, u: User): GetUserDTO {
         user.family = u.family
         user.invite = u.invite
         user.shoppingLists = u.shoppingLists
+        user.lastModTime = Date(System.currentTimeMillis())
         val us = userRepository.save(user)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)

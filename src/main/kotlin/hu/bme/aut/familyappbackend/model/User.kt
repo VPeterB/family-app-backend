@@ -1,5 +1,6 @@
 package hu.bme.aut.familyappbackend.model
 
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -30,6 +31,9 @@ data class User(
 
     @Column(name = "category")
     val category: String? = null,
+
+    @Column(name = "lastModTime")
+    var lastModTime: Date? = null,
 
     @ManyToOne
     @JoinColumn(name = "family")

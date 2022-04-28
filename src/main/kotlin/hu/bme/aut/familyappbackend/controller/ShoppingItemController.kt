@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -44,10 +45,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         }
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(!shoppingItem.done){
-            shoppingItem.done = true
-            val sI= shoppingItemRepository.save(shoppingItem)
-            val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
-            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI)) // TODO vegtelen megint: talán így jó
+            return ResponseEntity.ok(shoppingItemService.done(shoppingItem))
         }
         return ResponseEntity.badRequest().body(HttpStatus.NOT_MODIFIED)
     }
@@ -60,10 +58,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         }
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(shoppingItem.done){
-            shoppingItem.done = false
-            val sI= shoppingItemRepository.save(shoppingItem)
-            val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
-            return ResponseEntity.ok(shoppingItemMapper.convertToDto(sI))
+            return ResponseEntity.ok(shoppingItemService.undone(shoppingItem))
         }
         return ResponseEntity.badRequest().body(HttpStatus.NOT_MODIFIED)
     }

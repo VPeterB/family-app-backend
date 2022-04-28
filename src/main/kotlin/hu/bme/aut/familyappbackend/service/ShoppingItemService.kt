@@ -8,39 +8,46 @@ import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import org.mapstruct.factory.Mappers
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     fun save (shoppingItem: CreateShoppingItemDTO, shoppingList: ShoppingList): ShoppingItem{
-        val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, shoppingList)
+        val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, Date(System.currentTimeMillis()), shoppingList)
         var shoppingItems: MutableList<ShoppingItem> = mutableListOf()
         if(shoppingList.shoppingItems != null){
             shoppingItems = shoppingList.shoppingItems as MutableList<ShoppingItem>
         }
         shoppingItems.add(newSI)
         shoppingList.shoppingItems = shoppingItems
+        shoppingList.lastModTime = Date(System.currentTimeMillis())
         shoppingListRepository.save(shoppingList)
         return shoppingItemRepository.save(newSI)
     }
 
     fun delete (shoppingItem: ShoppingItem){
         val shoppingList = shoppingItem.shoppingList
-        if(shoppingList?.shoppingItems != null){
+        if(shoppingList?.shoppingItems != null) {
             val lShoppingItems: MutableList<ShoppingItem> = shoppingList.shoppingItems as MutableList<ShoppingItem>
-            if (lShoppingItems.contains(shoppingItem)){
+            if (lShoppingItems.contains(shoppingItem)) {
                 lShoppingItems.remove(shoppingItem)
                 shoppingList.shoppingItems = lShoppingItems
+                shoppingList.lastModTime = Date(System.currentTimeMillis())
                 shoppingListRepository.save(shoppingList)
             }
         }
+        shoppingItem.lastModTime = Date(System.currentTimeMillis())
+        shoppingItemRepository.delete(shoppingItem)
     }
 
     fun edit(shoppingItem: ShoppingItem, si: ShoppingItem): GetShoppingItemDTO {
         shoppingItem.shoppingList = si.shoppingList
+        shoppingItem.lastModTime = Date(System.currentTimeMillis())
         val sI= shoppingItemRepository.save(shoppingItem)
         val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
-        return shoppingItemMapper.convertToDto(sI) // TODO vegtelen megint: talán így jó
+        return shoppingItemMapper.convertToDto(sI)
     }
 
     fun byShoppingList(sList: ShoppingList): MutableList<GetShoppingItemDTO> {
@@ -54,5 +61,21 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
             }
         }
         return rSIs
+    }
+
+    fun undone(si: ShoppingItem): GetShoppingItemDTO{
+        si.done = false
+        si.lastModTime = Date(System.currentTimeMillis())
+        val sI= shoppingItemRepository.save(si)
+        val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+        return shoppingItemMapper.convertToDto(sI)
+    }
+
+    fun done(shoppingItem: ShoppingItem): GetShoppingItemDTO {
+        shoppingItem.done = true
+        shoppingItem.lastModTime = Date(System.currentTimeMillis())
+        val sI= shoppingItemRepository.save(shoppingItem)
+        val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
+        return shoppingItemMapper.convertToDto(sI)
     }
 }
