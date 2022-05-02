@@ -17,8 +17,8 @@ data class Invite(
 
     @ManyToOne
     @JoinColumn(name = "family")
-    val family: Family? = null,
+    var family: Family? = null,
 
     @OneToOne(mappedBy = "invite")
-    val user: User? = null
+    var user: User? = null
 )

@@ -60,12 +60,20 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         }
         val fInvites = family.invites
         if (fInvites != null) {
+            family.invites = null
             for(invite in fInvites){
-                invite.lastModTime = Date(System.currentTimeMillis())
+                invite.family = null
+                if(invite.user != null){
+                    invite.user!!.invite = null
+                    invite.user!!.lastModTime = Date(System.currentTimeMillis())
+                    userRepository.save(invite.user!!)
+                }
+                invite.user = null
+                inviteRepository.save(invite)
                 inviteRepository.delete(invite)
             }
         }
-        family.lastModTime = Date(System.currentTimeMillis())
+        familyRepository.save(family)
         familyRepository.delete(family)
     }
 

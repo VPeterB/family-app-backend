@@ -24,6 +24,7 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        println(shoppingitem.name + shoppingitem.done) //debug
         return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).id)
     }
 

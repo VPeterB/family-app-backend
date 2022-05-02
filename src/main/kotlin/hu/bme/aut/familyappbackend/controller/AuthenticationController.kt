@@ -1,11 +1,13 @@
 package hu.bme.aut.familyappbackend.controller
 
 import hu.bme.aut.familyappbackend.dto.CreateUserDTO
+import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import hu.bme.aut.familyappbackend.service.UserService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
@@ -44,6 +46,7 @@ class AuthenticationController(private val userService: UserService, private val
         val cookie = Cookie("jwt", jwt)
         cookie.isHttpOnly = true
         response.addCookie(cookie)
-        return ResponseEntity.ok(HttpStatus.ACCEPTED)
+        val userMapper = Mappers.getMapper(UserMapper::class.java)
+        return ResponseEntity.ok(userMapper.convertToDto(user))
     }
 }

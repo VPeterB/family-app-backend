@@ -34,7 +34,7 @@ class UserController (private val userRepository: UserRepository, private val in
         if (userID != userE.id) {
             return ResponseEntity.badRequest().body("UserID not match with the userE's id")
         }
-        val u = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val u = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(userService.edit(userE, u))
     }
 
@@ -43,18 +43,19 @@ class UserController (private val userRepository: UserRepository, private val in
         if(jwt == null){
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
-        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         val userDto = userMapper.convertToDto(user)
         return ResponseEntity.ok(userDto)
     }
 
     @RequestMapping(value = ["/sendinvite"], method = [RequestMethod.PUT])
-    fun inviteUser(@CookieValue("jwt") jwt: String?,  @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<Unit> {
+    fun inviteUser(@CookieValue("jwt") jwt: String?,  @Valid @RequestBody(required = true) invite: CreateInviteDTO): ResponseEntity<*> {
         if(jwt == null){
-            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
-        return userService.invite(invite)
+        val sender = userService.getUserByJWT(jwt)?: return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        return userService.invite(invite, sender)
     }
 
     @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
@@ -62,10 +63,10 @@ class UserController (private val userRepository: UserRepository, private val in
         if(jwt == null){
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
-        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+        val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val inviteId = user.invite?.id
         if(inviteId != null){
-            val invite: Invite = inviteRepository.findInviteById(inviteId)?: return ResponseEntity.ok(HttpStatus.NOT_FOUND)
+            val invite: Invite = inviteRepository.findInviteById(inviteId)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
             val inviteMapper = Mappers.getMapper(InviteMapper::class.java)
             val inviteDto = inviteMapper.convertToDto(invite)
             return ResponseEntity.ok(inviteDto)

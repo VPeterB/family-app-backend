@@ -3,6 +3,7 @@ package hu.bme.aut.familyappbackend.service
 import hu.bme.aut.familyappbackend.dto.CreateInviteDTO
 import hu.bme.aut.familyappbackend.dto.CreateUserDTO
 import hu.bme.aut.familyappbackend.dto.GetUserDTO
+import hu.bme.aut.familyappbackend.mapper.InviteMapper
 import hu.bme.aut.familyappbackend.mapper.UserMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.Invite
@@ -54,6 +55,7 @@ class UserService(private val userRepository: UserRepository, private val family
     fun delete(userID: Int): ResponseEntity<Unit>{
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family = user.family
+        user.family = null
         if(family?.users != null){
             val fUsers = family.users as MutableList<User>
             if(fUsers.contains(user))
@@ -63,23 +65,27 @@ class UserService(private val userRepository: UserRepository, private val family
         }
         val invite = user.invite
         if (invite != null) {
-            invite.lastModTime = Date(System.currentTimeMillis())
+            user.invite = null
             inviteRepository.delete(invite)
         }
         if(user.shoppingLists != null){
             val uSLs = user.shoppingLists as MutableList<ShoppingList>
+            user.shoppingLists = null
             for(sl in uSLs){
                 shoppingListService.removeUser(sl.id, user.id)
             }
         }
-        user.lastModTime = Date(System.currentTimeMillis())
+        userRepository.save(user)
         userRepository.delete(user)
         return ResponseEntity(HttpStatus.OK)
     }
 
-    fun invite (invite: CreateInviteDTO): ResponseEntity<Unit>{
-        val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val family: Family = familyRepository.findFamilyById(invite.familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+    fun invite (invite: CreateInviteDTO, sender: User): ResponseEntity<*>{
+        val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        val family: Family = familyRepository.findFamilyById(invite.familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        if(user == sender || sender.family == null || sender.family!!.id != family.id || user.family?.id == sender.family!!.id){
+            return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN)
+        }
         if(user.invite != null){
             user.invite!!.lastModTime = Date(System.currentTimeMillis())
             inviteRepository.delete(user.invite!!)
@@ -108,7 +114,8 @@ class UserService(private val userRepository: UserRepository, private val family
         family.invites = fInvites
         family.lastModTime = Date(System.currentTimeMillis())
         familyRepository.save(family)
-        return ResponseEntity(HttpStatus.OK)
+        val inviteMapper = Mappers.getMapper(InviteMapper::class.java)
+        return ResponseEntity.ok(inviteMapper.convertToDto(i))
     }
 
     fun edit(user: User, u: User): GetUserDTO {
@@ -120,5 +127,4 @@ class UserService(private val userRepository: UserRepository, private val family
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)
     }
-
 }

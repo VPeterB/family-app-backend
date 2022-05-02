@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository){
+class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val shoppingItemService: ShoppingItemService){
     fun addUser(shoppingList: ShoppingList, user: User): ShoppingList{
         var sUsers: MutableList<User> = mutableListOf()
         if(shoppingList.users != null){
@@ -55,7 +55,14 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
             family.lastModTime = Date(System.currentTimeMillis())
             familyRepository.save(family)
         }
-        shoppingList.lastModTime = Date(System.currentTimeMillis())
+        val slItems = shoppingList.shoppingItems
+        if (slItems != null) {
+            shoppingList.shoppingItems = null
+            for(item in slItems){
+                shoppingItemService.delete(item)
+            }
+        }
+        shoppingListRepository.save(shoppingList)
         shoppingListRepository.delete(shoppingList)
     }
 

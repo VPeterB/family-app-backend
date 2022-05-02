@@ -14,7 +14,7 @@ data class ShoppingItem(
     val id: Int,
 
     @Column(name = "name", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name = "done")
     var done: Boolean = false,

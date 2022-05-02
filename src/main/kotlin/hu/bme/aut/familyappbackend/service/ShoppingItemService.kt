@@ -15,7 +15,9 @@ import java.util.*
 @Service
 class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     fun save (shoppingItem: CreateShoppingItemDTO, shoppingList: ShoppingList): ShoppingItem{
+        println(shoppingItem.name + shoppingItem.done)
         val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, Date(System.currentTimeMillis()), shoppingList)
+        println(newSI.name + newSI.done)
         var shoppingItems: MutableList<ShoppingItem> = mutableListOf()
         if(shoppingList.shoppingItems != null){
             shoppingItems = shoppingList.shoppingItems as MutableList<ShoppingItem>
@@ -24,6 +26,7 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
         shoppingList.shoppingItems = shoppingItems
         shoppingList.lastModTime = Date(System.currentTimeMillis())
         shoppingListRepository.save(shoppingList)
+        newSI.name = shoppingItem.name
         return shoppingItemRepository.save(newSI)
     }
 
@@ -38,7 +41,6 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
                 shoppingListRepository.save(shoppingList)
             }
         }
-        shoppingItem.lastModTime = Date(System.currentTimeMillis())
         shoppingItemRepository.delete(shoppingItem)
     }
 
