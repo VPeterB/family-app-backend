@@ -10,6 +10,8 @@ import hu.bme.aut.familyappbackend.repository.InviteRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import org.mapstruct.factory.Mappers
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
 

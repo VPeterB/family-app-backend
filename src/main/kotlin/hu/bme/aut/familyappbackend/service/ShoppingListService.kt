@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val shoppingItemService: ShoppingItemService){
+class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val shoppingItemService: ShoppingItemService, private val userService: UserService){
     fun addUser(shoppingList: ShoppingList, user: User): ShoppingList{
         var sUsers: MutableList<User> = mutableListOf()
         if(shoppingList.users != null){
@@ -124,5 +124,16 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         val sL = shoppingListRepository.save(shoppingList)
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         return shoppingListMapper.convertToDto(sL)
+    }
+
+    fun checkShoppingListMember(shoppingList: ShoppingList, jwt: String): Boolean{
+        val user = userService.getUserByJWT(jwt)?: return false
+        val slUsers = shoppingList.users
+        if (slUsers != null) {
+            if(slUsers.contains(user)){
+                return true
+            }
+        }
+        return false
     }
 }

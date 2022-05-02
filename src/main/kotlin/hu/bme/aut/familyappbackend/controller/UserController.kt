@@ -23,7 +23,7 @@ class UserController (private val userRepository: UserRepository, private val in
         if(jwt == null){
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
         }
-        return userService.delete(userID)
+        return userService.delete(userID, jwt)
     }
 
     @RequestMapping(value = ["/{userID}"], method = [RequestMethod.PUT])
@@ -35,6 +35,8 @@ class UserController (private val userRepository: UserRepository, private val in
             return ResponseEntity.badRequest().body("UserID not match with the userE's id")
         }
         val u = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        if(!userService.checkUser(u, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
         return ResponseEntity.ok(userService.edit(userE, u))
     }
 
@@ -55,15 +57,18 @@ class UserController (private val userRepository: UserRepository, private val in
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
         val sender = userService.getUserByJWT(jwt)?: return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
+        if(!userService.checkUser(sender, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
         return userService.invite(invite, sender)
     }
 
     @RequestMapping(value = ["/{userID}/invite"], method = [RequestMethod.GET])
     fun getUserInvite(@CookieValue("jwt") jwt: String?, @PathVariable("userID") userID: Int): ResponseEntity<*> {
-        if(jwt == null){
+        if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        }
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+        if(!userService.checkUser(user, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
         val inviteId = user.invite?.id
         if(inviteId != null){
             val invite: Invite = inviteRepository.findInviteById(inviteId)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)

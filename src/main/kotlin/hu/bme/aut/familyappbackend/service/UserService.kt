@@ -11,6 +11,7 @@ import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.model.User
 import hu.bme.aut.familyappbackend.repository.FamilyRepository
 import hu.bme.aut.familyappbackend.repository.InviteRepository
+import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.repository.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -24,7 +25,7 @@ import java.util.*
 import javax.crypto.SecretKey
 
 @Service
-class UserService(private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val inviteRepository: InviteRepository, private val shoppingListService: ShoppingListService) {
+class UserService(private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository) {
 
     private val passwordEncoder = BCryptPasswordEncoder()
     val secret: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512)
@@ -52,9 +53,11 @@ class UserService(private val userRepository: UserRepository, private val family
         }
     }
     
-    fun delete(userID: Int): ResponseEntity<Unit>{
+    fun delete(userID: Int, jwt: String?): ResponseEntity<Unit>{
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family = user.family
+        if(jwt == null || !checkUser(user, jwt) || !checkFamilyMember(family, jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
         user.family = null
         if(family?.users != null){
             val fUsers = family.users as MutableList<User>
@@ -70,10 +73,17 @@ class UserService(private val userRepository: UserRepository, private val family
         }
         if(user.shoppingLists != null){
             val uSLs = user.shoppingLists as MutableList<ShoppingList>
-            user.shoppingLists = null
             for(sl in uSLs){
-                shoppingListService.removeUser(sl.id, user.id)
+                if(sl.users != null){
+                    val slUsers = sl.users as MutableList<User>
+                    if(slUsers.contains(user))
+                        slUsers.remove(user)
+                    sl.users = slUsers
+                    sl.lastModTime = Date(System.currentTimeMillis())
+                    shoppingListRepository.save(sl)
+                }
             }
+            user.shoppingLists = null
         }
         userRepository.save(user)
         userRepository.delete(user)
@@ -126,5 +136,21 @@ class UserService(private val userRepository: UserRepository, private val family
         val us = userRepository.save(user)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)
+    }
+
+    fun checkUser(user: User, jwt: String): Boolean{
+        val userLogged = getUserByJWT(jwt)?: return false
+        return user == userLogged
+    }
+
+    fun checkFamilyMember(family: Family?, jwt: String): Boolean{
+        val user = getUserByJWT(jwt)?: return false
+        val fUsers = family?.users
+        if (fUsers != null) {
+            if(fUsers.contains(user)){
+                return true
+            }
+        }
+        return false
     }
 }
