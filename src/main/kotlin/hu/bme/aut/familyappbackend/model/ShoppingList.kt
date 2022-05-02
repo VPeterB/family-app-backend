@@ -25,6 +25,6 @@ data class ShoppingList(
     @ManyToMany(mappedBy = "shoppingLists")
     var users: List<User>? = null,
 
-    @OneToMany(mappedBy = "shoppingList", cascade = [CascadeType.PERSIST])
+    @OneToMany(mappedBy = "shoppingList")
     var shoppingItems: List<ShoppingItem>? = null
 )

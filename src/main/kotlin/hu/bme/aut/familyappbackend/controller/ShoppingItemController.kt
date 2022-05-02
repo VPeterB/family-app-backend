@@ -8,6 +8,7 @@ import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import hu.bme.aut.familyappbackend.service.ShoppingItemService
 import org.mapstruct.factory.Mappers
+import org.springframework.beans.factory.annotation.Required
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -24,7 +25,6 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         }
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        println(shoppingitem.name + shoppingitem.done) //debug
         return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).id)
     }
 
