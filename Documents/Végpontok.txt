@@ -1,4 +1,4 @@
-ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    	 - PERMISSON
+ENDPOINT NAME             - METHOD TYPE   - REQUIRED, (OPTIONAL) PARAMETERS	 - PERMISSON
 
 /api/register             - POST          - email, password		    	 - none
 /api/login                - POST          - email, password		    	 - none
@@ -19,7 +19,7 @@ ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    	 - PERMISS
 			  - DELTE	  - jwt, shoppinglistID		    	 - shopping list member
 	/byfamily	  - GET		  - jwt, familyID			 - family member
 	/byuser		  - GET		  - jwt, userID			    	 - logged in user
-	/create		  - POST          - jwt, familyID, name		    	 - none
+	/create		  - POST          - jwt, name, (familyID)		 - none
 	/adduser	  - PUT		  - jwt, shoppinglistID, userID	    	 - shopping list member
 	/removeuser	  - PUT		  - jwt, shoppinglistID, userID	    	 - shopping list member
 	/shoppingitem	  - GET		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
@@ -29,4 +29,12 @@ ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    	 - PERMISS
 		/add	  - POST	  - jwt, shoppinglistID  		 - shopping list member
 		/done	  - PUT		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
 		/undone	  - PUT		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
+/api/event		  - GET		  - jwt, eventID		    	 - event member or family member
+			  - PUT		  - jwt, eventID, event			 - event member or family member 
+			  - DELTE	  - jwt, eventID		    	 - event member or family member
+	/byfamily	  - GET		  - jwt, familyID			 - family member
+	/byuser		  - GET		  - jwt, userID			    	 - logged in user
+	/create		  - POST          - jwt, name, end, start, (familyID, description, location)  - none 
+	/adduser	  - PUT		  - jwt, eventID, userID	    	 - event member or family member
+	/removeuser	  - PUT		  - jwt, eventID, userID	    	 - event member or family member
 	
