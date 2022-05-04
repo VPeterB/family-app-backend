@@ -1,32 +1,32 @@
-ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    - PERMISSON
+ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    	 - PERMISSON
 
-/api/register             - POST          - email, password		    - none
-/api/login                - POST          - email, password		    - none
-/api/user		  - GET		  - userID			    - none
-	                  - PUT           - userID, user		    - logged in user
-			  - DELTE	  - userID			    - logged in user or family member
-	/invite		  - GET		  - userID			    - logged in user
-	/sendinvite	  - PUT	  	  - familyID, email		    - logged in user (no self invite, sender must be in a family, 
-									      sender can only invite to its own family, can not invite family member)
-/api/family		  - GET		  - familyID			    - family member
-			  - PUT 	  - familyID, family		    - family member
-			  - DELTE	  - familyID			    - family member
-	/create		  - POST          - (picture)			    - none
-	/adduser	  - PUT		  - familyID, userID		    - family member
-	/removeuser	  - PUT		  - familyID, userID		    - family member
-/api/shoppinglist	  - GET		  - shoppinglistID		    - shopping list member
-			  - PUT		  - shoppinglistID, shoppingList    - shopping list member
-			  - DELTE	  - shoppinglistID		    - shopping list member
-	/byfamily	  - GET		  - familyID			    - family member
-	/byuser		  - GET		  - userID			    - logged in user
-	/create		  - POST          - familyID, name		    - none
-	/adduser	  - PUT		  - shoppinglistID, userID	    - shopping list member
-	/removeuser	  - PUT		  - shoppinglistID, userID	    - shopping list member
-	/shoppingitem	  - GET		  - shoppinglistID, shoppingitemID  - shopping list member
-			  - PUT 	  - shoppinglistID, shoppingitemID  - shopping list member
-			  - DELETE 	  - shoppinglistID, shoppingitemID  - shopping list member
-		/all	  - GET		  - shoppinglistID		    - shopping list member
-		/add	  - POST	  - shoppinglistID  		    - shopping list member
-		/done	  - PUT		  - shoppinglistID, shoppingitemID  - shopping list member
-		/undone	  - PUT		  - shoppinglistID, shoppingitemID  - shopping list member
+/api/register             - POST          - email, password		    	 - none
+/api/login                - POST          - email, password		    	 - none
+/api/user		  - GET		  - jwt, userID			    	 - none
+	                  - PUT           - jwt, userID, user		    	 - logged in user
+			  - DELTE	  - jwt, userID			    	 - logged in user or family member
+	/invite		  - GET		  - jwt, userID			    	 - logged in user
+	/sendinvite	  - PUT	  	  - jwt, familyID, email	    	 - logged in user (no self invite, sender must be in a family, 
+									      	   sender can only invite to its own family, can not invite family member)
+/api/family		  - GET		  - jwt, familyID			 - family member
+			  - PUT 	  - jwt, familyID, family		 - family member
+			  - DELTE	  - jwt, familyID			 - family member
+	/create		  - POST          - jwt				    	 - none
+	/adduser	  - PUT		  - jwt, familyID, userID	    	 - family member
+	/removeuser	  - PUT		  - jwt, familyID, userID		 - family member
+/api/shoppinglist	  - GET		  - jwt, shoppinglistID		    	 - shopping list member
+			  - PUT		  - jwt, shoppinglistID, shoppingList    - shopping list member
+			  - DELTE	  - jwt, shoppinglistID		    	 - shopping list member
+	/byfamily	  - GET		  - jwt, familyID			 - family member
+	/byuser		  - GET		  - jwt, userID			    	 - logged in user
+	/create		  - POST          - jwt, familyID, name		    	 - none
+	/adduser	  - PUT		  - jwt, shoppinglistID, userID	    	 - shopping list member
+	/removeuser	  - PUT		  - jwt, shoppinglistID, userID	    	 - shopping list member
+	/shoppingitem	  - GET		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
+			  - PUT 	  - jwt, shoppinglistID, shoppingitemID  - shopping list member
+			  - DELETE 	  - jwt, shoppinglistID, shoppingitemID  - shopping list member
+		/all	  - GET		  - jwt, shoppinglistID		    	 - shopping list member
+		/add	  - POST	  - jwt, shoppinglistID  		 - shopping list member
+		/done	  - PUT		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
+		/undone	  - PUT		  - jwt, shoppinglistID, shoppingitemID  - shopping list member
 	
