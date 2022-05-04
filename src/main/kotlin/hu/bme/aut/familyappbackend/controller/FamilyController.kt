@@ -28,7 +28,7 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         return ResponseEntity.ok(familyService.addUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
     }
 
-    @RequestMapping(value = ["/create"], method = [RequestMethod.POST]) //TODO kép // TODO backend picture bytearray-t vár --> meeting: MultipartFile
+    @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
     fun createFamily(@CookieValue("jwt") jwt: String?, @Valid @RequestBody(required = false) picture: MultipartFile?): ResponseEntity<*> {
         if(jwt == null){
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)

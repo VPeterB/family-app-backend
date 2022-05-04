@@ -1,28 +1,32 @@
-ENDPOINT NAME                   - METHOD TYPE   - REQUIRED PARAMETERS
+ENDPOINT NAME             - METHOD TYPE   - REQUIRED PARAMETERS		    - PERMISSON
 
-/api/register                   - POST          - email, password
-/api/login                      - POST          - email, password
-/api/user			- GET		- userID
-	/edit                  	- PUT           - userID, username, telephone, profile picture, forename, surename, category	
-	/sendinvite		- POST		- userID, familyID, email
-	/delete			- DELTE		- userID
-/api/family			- GET		- familyID
-	/create			- POST          - userID, picture
-	/edit			- PUT 		- userID, familyID, picture
-	/delete			- DELTE		- userID, familyID
-	/adduser		- PUT		- userID, familyID, email
-	/removeuser		- PUT		- userID, familyID, email
-/api/shoppinglist		- GET		- shoppinglistID
-	/byfamily		- GET		- familyID
-	/create			- POST          - userID, familyID, name
-	/edit			- PUT		- userID, shoppinglistID, name
-	/delete			- DELTE		- userID, shoppinglistID
-	/adduser		- PUT		- userID, familyID, userID, email
-	/removeuser		- PUT		- userID, familyID, userID, email
-	/shoppingitem		- GET		- shoppinglistID, shoppingitemID
-		/all		- GET		- shoppinglistID
-		/add		- POST		- userID, shoppinglistID, name
-		/delte		- DELETE 	- shoppinglistID, shoppingitemID
-		/done		- PUT		- userID, shoppinglistID, shoppingitemID
-		/undone		- PUT		- userID, shoppinglistID, shoppingitemID
+/api/register             - POST          - email, password		    - none
+/api/login                - POST          - email, password		    - none
+/api/user		  - GET		  - userID			    - none
+	                  - PUT           - userID, user		    - logged in user
+			  - DELTE	  - userID			    - logged in user or family member
+	/invite		  - GET		  - userID			    - logged in user
+	/sendinvite	  - PUT	  	  - familyID, email		    - logged in user (no self invite, sender must be in a family, 
+									      sender can only invite to its own family, can not invite family member)
+/api/family		  - GET		  - familyID			    - family member
+			  - PUT 	  - familyID, family		    - family member
+			  - DELTE	  - familyID			    - family member
+	/create		  - POST          - (picture)			    - none
+	/adduser	  - PUT		  - familyID, userID		    - family member
+	/removeuser	  - PUT		  - familyID, userID		    - family member
+/api/shoppinglist	  - GET		  - shoppinglistID		    - shopping list member
+			  - PUT		  - shoppinglistID, shoppingList    - shopping list member
+			  - DELTE	  - shoppinglistID		    - shopping list member
+	/byfamily	  - GET		  - familyID			    - family member
+	/byuser		  - GET		  - userID			    - logged in user
+	/create		  - POST          - familyID, name		    - none
+	/adduser	  - PUT		  - shoppinglistID, userID	    - shopping list member
+	/removeuser	  - PUT		  - shoppinglistID, userID	    - shopping list member
+	/shoppingitem	  - GET		  - shoppinglistID, shoppingitemID  - shopping list member
+			  - PUT 	  - shoppinglistID, shoppingitemID  - shopping list member
+			  - DELETE 	  - shoppinglistID, shoppingitemID  - shopping list member
+		/all	  - GET		  - shoppinglistID		    - shopping list member
+		/add	  - POST	  - shoppinglistID  		    - shopping list member
+		/done	  - PUT		  - shoppinglistID, shoppingitemID  - shopping list member
+		/undone	  - PUT		  - shoppinglistID, shoppingitemID  - shopping list member
 	

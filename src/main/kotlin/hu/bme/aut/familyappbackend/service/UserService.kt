@@ -140,7 +140,7 @@ class UserService(private val userRepository: UserRepository, private val family
 
     fun checkUser(user: User, jwt: String): Boolean{
         val userLogged = getUserByJWT(jwt)?: return false
-        return user == userLogged
+        return user.id == userLogged.id
     }
 
     fun checkFamilyMember(family: Family?, jwt: String): Boolean{
