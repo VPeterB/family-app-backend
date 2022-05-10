@@ -19,6 +19,10 @@ abstract class UserMapper {
         for (shoppingList in source.shoppingLists!!){
             shoppingIDS.add(shoppingList.id)
         }
+        val eventIDS: MutableList<Int> = mutableListOf()
+        for (event in source.events!!){
+            eventIDS.add(event.id)
+        }
         target.shoppingListIDs = shoppingIDS
     }
 }

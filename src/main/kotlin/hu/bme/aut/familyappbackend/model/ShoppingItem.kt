@@ -9,7 +9,7 @@ import javax.persistence.*
 data class ShoppingItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @field:JsonProperty("id", required = true)
     val id: Int,
 

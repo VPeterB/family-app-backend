@@ -18,5 +18,6 @@ data class GetUserDTO(
     val lastModTime: Timestamp? = null,
     var familyID: Int? = null,
     var inviteID: Int? = null,
-    var shoppingListIDs: List<Int>? = null
+    var shoppingListIDs: List<Int>? = null,
+    var eventIDs: List<Int>? = null
 ){}

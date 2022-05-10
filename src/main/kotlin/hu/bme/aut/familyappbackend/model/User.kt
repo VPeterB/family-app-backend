@@ -46,10 +46,18 @@ data class User(
     @ManyToMany(cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "user_shoppinglist",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "ID")],
-        inverseJoinColumns = [JoinColumn(name = "sl_id", referencedColumnName = "ID")]
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "sl_id", referencedColumnName = "id")]
     )
-    var shoppingLists: List<ShoppingList>? = null
+    var shoppingLists: List<ShoppingList>? = null,
+
+    @ManyToMany(cascade = [CascadeType.PERSIST])
+    @JoinTable(
+        name = "user_event",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "event_id", referencedColumnName = "id")]
+    )
+    var events: List<Event>? = null
 )
 {
 }

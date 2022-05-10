@@ -5,14 +5,8 @@ import hu.bme.aut.familyappbackend.dto.CreateUserDTO
 import hu.bme.aut.familyappbackend.dto.GetUserDTO
 import hu.bme.aut.familyappbackend.mapper.InviteMapper
 import hu.bme.aut.familyappbackend.mapper.UserMapper
-import hu.bme.aut.familyappbackend.model.Family
-import hu.bme.aut.familyappbackend.model.Invite
-import hu.bme.aut.familyappbackend.model.ShoppingList
-import hu.bme.aut.familyappbackend.model.User
-import hu.bme.aut.familyappbackend.repository.FamilyRepository
-import hu.bme.aut.familyappbackend.repository.InviteRepository
-import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
-import hu.bme.aut.familyappbackend.repository.UserRepository
+import hu.bme.aut.familyappbackend.model.*
+import hu.bme.aut.familyappbackend.repository.*
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -25,7 +19,7 @@ import java.sql.Timestamp
 import javax.crypto.SecretKey
 
 @Service
-class UserService(private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository) {
+class UserService(private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository, private val eventRepository: EventRepository) {
 
     private val passwordEncoder = BCryptPasswordEncoder()
     val secret: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512)
@@ -84,6 +78,20 @@ class UserService(private val userRepository: UserRepository, private val family
                 }
             }
             user.shoppingLists = null
+        }
+        if(user.events != null){
+            val uEvents = user.events as MutableList<Event>
+            for(e in uEvents){
+                if(e.users != null){
+                    val eUsers = e.users as MutableList<User>
+                    if(eUsers.contains(user))
+                        eUsers.remove(user)
+                    e.users = eUsers
+                    e.lastModTime = Timestamp(System.currentTimeMillis())
+                    eventRepository.save(e)
+                }
+            }
+            user.events = null
         }
         userRepository.save(user)
         userRepository.delete(user)

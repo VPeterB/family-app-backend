@@ -4,16 +4,13 @@ import hu.bme.aut.familyappbackend.dto.GetFamilyDTO
 import hu.bme.aut.familyappbackend.mapper.FamilyMapper
 import hu.bme.aut.familyappbackend.model.Family
 import hu.bme.aut.familyappbackend.model.User
-import hu.bme.aut.familyappbackend.repository.FamilyRepository
-import hu.bme.aut.familyappbackend.repository.InviteRepository
-import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
-import hu.bme.aut.familyappbackend.repository.UserRepository
+import hu.bme.aut.familyappbackend.repository.*
 import org.mapstruct.factory.Mappers
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
 @Service
-class FamilyService (private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository) {
+class FamilyService (private val familyRepository: FamilyRepository, private val userRepository: UserRepository, private val inviteRepository: InviteRepository, private val shoppingListRepository: ShoppingListRepository, private val eventRepository: EventRepository) {
     fun save (user: User): GetFamilyDTO {
         val users = mutableListOf<User>()
         users.add(user)
@@ -55,6 +52,14 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
                 sl.family = null
                 sl.lastModTime = Timestamp(System.currentTimeMillis())
                 shoppingListRepository.save(sl)
+            }
+        }
+        val fEvents = family.events
+        if (fEvents != null) {
+            for(e in fEvents){
+                e.family = null
+                e.lastModTime = Timestamp(System.currentTimeMillis())
+                eventRepository.save(e)
             }
         }
         val fInvites = family.invites

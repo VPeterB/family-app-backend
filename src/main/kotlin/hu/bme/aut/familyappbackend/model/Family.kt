@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Family (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @field:JsonProperty("id", required = true)
     val id: Int,
 
@@ -21,6 +21,9 @@ data class Family (
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var shoppingLists: List<ShoppingList>? = null,
+
+    @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
+    var events: List<Event>? = null,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var invites: List<Invite>? = null

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Invite(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
 
     @Column(name = "lastModTime")
