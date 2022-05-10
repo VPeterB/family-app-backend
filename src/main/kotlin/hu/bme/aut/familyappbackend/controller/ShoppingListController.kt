@@ -40,6 +40,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val user = userService.getUserByJWT(jwt)?: return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val newSL = ShoppingList(0, shoppinglistcreate.name)
         newSL.lastModTime = Timestamp(System.currentTimeMillis())
+        newSL.users = mutableListOf()
+        newSL.shoppingItems = mutableListOf()
         if(shoppinglistcreate.familyID != null){
             val family: Family = familyRepository.findFamilyById(shoppinglistcreate.familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
             newSL.family = family

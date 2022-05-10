@@ -122,6 +122,7 @@ class EventService (private val eventRepository: EventRepository, private val us
     fun create(eventCreate: GetEventDTO, user: User): ResponseEntity<*>{
         val newEvent = Event(0, eventCreate.location, eventCreate.description, eventCreate.name, eventCreate.end, eventCreate.start)
         newEvent.lastModTime = Timestamp(System.currentTimeMillis())
+        newEvent.users = mutableListOf()
         if(eventCreate.familyID != null){
             val family: Family = familyRepository.findFamilyById(eventCreate.familyID!!)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
             newEvent.family = family
@@ -129,8 +130,8 @@ class EventService (private val eventRepository: EventRepository, private val us
         if(eventCreate.userIDs != null){
             val users = mutableListOf<User>()
             for (id in eventCreate.userIDs!!){
-                val user: User = userRepository.findUserById(id)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-                users.add(user)
+                val userA: User = userRepository.findUserById(id)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
+                users.add(userA)
             }
             newEvent.users = users
         }

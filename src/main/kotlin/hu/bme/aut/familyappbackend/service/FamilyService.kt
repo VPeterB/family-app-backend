@@ -14,7 +14,7 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
     fun save (user: User): GetFamilyDTO {
         val users = mutableListOf<User>()
         users.add(user)
-        val f = familyRepository.save(Family(0, Timestamp(System.currentTimeMillis()), users, mutableListOf(), mutableListOf()))
+        val f = familyRepository.save(Family(0, Timestamp(System.currentTimeMillis()), users, mutableListOf(), mutableListOf(), mutableListOf()))
         user.family = f
         user.lastModTime = Timestamp(System.currentTimeMillis())
         userRepository.save(user)

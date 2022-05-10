@@ -28,6 +28,7 @@ class UserService(private val userRepository: UserRepository, private val family
         val pw = this.passwordEncoder.encode(user.password)
         val newUser = User(0,user.email, pw)
         newUser.shoppingLists = mutableListOf()
+        newUser.events = mutableListOf()
         newUser.lastModTime = Timestamp(System.currentTimeMillis())
         val us = userRepository.save(newUser)
         val userMapper = Mappers.getMapper(UserMapper::class.java)

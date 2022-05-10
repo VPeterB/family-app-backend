@@ -24,5 +24,6 @@ abstract class UserMapper {
             eventIDS.add(event.id)
         }
         target.shoppingListIDs = shoppingIDS
+        target.eventIDs = eventIDS
     }
 }
