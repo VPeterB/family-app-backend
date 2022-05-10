@@ -22,8 +22,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!userService.checkFamilyMember(family, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(family, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(familyService.addUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
     }
@@ -42,8 +42,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         if(jwt == null)
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        if(!userService.checkFamilyMember(family, jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(family, jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(familyService.delete(family))
     }
 
@@ -55,8 +55,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val f: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!userService.checkFamilyMember(f, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(f, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(familyService.edit(family, f))
     }
 
@@ -65,8 +65,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!userService.checkFamilyMember(family, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(family, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
         return ResponseEntity.ok(familyMapper.convertToDto(family))
     }
@@ -76,8 +76,8 @@ class FamilyController (private val familyRepository: FamilyRepository, private 
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!userService.checkFamilyMember(family, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(family, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(familyService.removeUser(family, user)?: return ResponseEntity.badRequest().body(HttpStatus.NO_CONTENT))
     }

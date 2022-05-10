@@ -23,8 +23,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!shoppingListService.checkShoppingListMember(shoppingList, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingList, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(shoppingItemService.save(shoppingitem, shoppingList).id)
     }
 
@@ -33,8 +33,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     {
         if(jwt == null)
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         val si: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity.ok(shoppingItemService.delete(si))
     }
@@ -44,8 +44,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     {
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(!shoppingItem.done){
             return ResponseEntity.ok(shoppingItemService.done(shoppingItem))
@@ -58,8 +58,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     {
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val shoppingItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(shoppingItem.done){
             return ResponseEntity.ok(shoppingItemService.undone(shoppingItem))
@@ -73,8 +73,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     {
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         if (shoppingitemID != shoppingitem.id) {
             return ResponseEntity.badRequest().body("ShoppingItemID not match with the shoppingItemE's id")
         }
@@ -88,8 +88,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val sList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!shoppingListService.checkShoppingListMember(sList, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(sList, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(shoppingItemService.byShoppingList(sList))
     }
 
@@ -98,8 +98,8 @@ class ShoppingItemController (private val shoppingItemRepository: ShoppingItemRe
     {
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!shoppingListService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.status(401).body(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val sItem: ShoppingItem = shoppingItemRepository.findShoppingItemById(shoppingitemID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val sItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
         val sItemDto = sItemMapper.convertToDto(sItem)

@@ -26,8 +26,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         if(jwt == null)
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        if(!sLService.checkShoppingListMember(shoppingList, jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!sLService.checkShoppingListMember(shoppingList, jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         sLService.addUser(shoppingList, user)
         return ResponseEntity(HttpStatus.OK)
@@ -54,8 +54,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val sl: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         if(jwt == null)
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        if(!sLService.checkShoppingListMember(sl, jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!sLService.checkShoppingListMember(sl, jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(sLService.delete(sl))
     }
 
@@ -67,8 +67,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val sl = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!sLService.checkShoppingListMember(sl, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!sLService.checkShoppingListMember(sl, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(sLService.edit(shoppinglist, sl))
     }
 
@@ -77,8 +77,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val shoppingList: ShoppingList = shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!sLService.checkShoppingListMember(shoppingList, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!sLService.checkShoppingListMember(shoppingList, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         return ResponseEntity.ok(shoppingListMapper.convertToDto(shoppingList))
     }
@@ -88,8 +88,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         val family: Family = familyRepository.findFamilyById(familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
-        if(!userService.checkFamilyMember(family, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkFamilyMember(family, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(sLService.byFamily(family)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
@@ -98,8 +98,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
         if(jwt == null)
             return ResponseEntity.status(401).body(HttpStatus.UNAUTHORIZED)
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(!userService.checkUser(user, jwt))
-            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!userService.checkUser(user, jwt))
+            return ResponseEntity.status(405).body(HttpStatus.METHOD_NOT_ALLOWED)*/
         return ResponseEntity.ok(sLService.byUser(user)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND))
     }
 
@@ -107,8 +107,8 @@ class ShoppingListController (private val shoppingListRepository: ShoppingListRe
     fun removeUserFromShoppingList(@CookieValue("jwt") jwt: String?, @PathVariable("shoppinglistID") shoppinglistID: Int, @Valid @RequestBody userID: Int): ResponseEntity<Unit> {
         if(jwt == null)
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        if(!sLService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND), jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(!sLService.checkShoppingListMember(shoppingListRepository.findShoppingListById(shoppinglistID)?: return ResponseEntity(HttpStatus.NOT_FOUND), jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         return sLService.removeUser(shoppinglistID, userID)
     }
 }

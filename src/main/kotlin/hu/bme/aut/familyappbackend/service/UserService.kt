@@ -56,8 +56,8 @@ class UserService(private val userRepository: UserRepository, private val family
     fun delete(userID: Int, jwt: String?): ResponseEntity<Unit>{
         val user: User = userRepository.findUserById(userID)?: return ResponseEntity(HttpStatus.NOT_FOUND)
         val family = user.family
-        if(jwt == null || !checkUser(user, jwt) || !checkFamilyMember(family, jwt))
-            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)
+        /*if(jwt == null || !checkUser(user, jwt) || !checkFamilyMember(family, jwt))
+            return ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED)*/
         user.family = null
         if(family?.users != null){
             val fUsers = family.users as MutableList<User>
@@ -93,9 +93,9 @@ class UserService(private val userRepository: UserRepository, private val family
     fun invite (invite: CreateInviteDTO, sender: User): ResponseEntity<*>{
         val user: User = userRepository.findUserByEmail(invite.email)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
         val family: Family = familyRepository.findFamilyById(invite.familyID)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)
-        if(user == sender || sender.family == null || sender.family!!.id != family.id || user.family?.id == sender.family!!.id){
+        /*if(user == sender || sender.family == null || sender.family!!.id != family.id || user.family?.id == sender.family!!.id){
             return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN)
-        }
+        }*/
         if(user.invite != null){
             user.invite!!.lastModTime = Date(System.currentTimeMillis())
             inviteRepository.delete(user.invite!!)
