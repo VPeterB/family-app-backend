@@ -1,9 +1,7 @@
 package hu.bme.aut.familyappbackend.mapper
 
 import hu.bme.aut.familyappbackend.dto.GetShoppingListDTO
-import hu.bme.aut.familyappbackend.dto.GetUserDTO
 import hu.bme.aut.familyappbackend.model.ShoppingList
-import hu.bme.aut.familyappbackend.model.User
 import org.mapstruct.AfterMapping
 import org.mapstruct.Mapper
 import org.mapstruct.MappingTarget

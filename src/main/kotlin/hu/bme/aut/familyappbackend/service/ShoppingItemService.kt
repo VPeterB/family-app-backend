@@ -8,21 +8,20 @@ import hu.bme.aut.familyappbackend.model.ShoppingList
 import hu.bme.aut.familyappbackend.repository.ShoppingItemRepository
 import hu.bme.aut.familyappbackend.repository.ShoppingListRepository
 import org.mapstruct.factory.Mappers
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.util.*
+import java.sql.Timestamp
 
 @Service
 class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepository, private val shoppingListRepository: ShoppingListRepository){
     fun save (shoppingItem: CreateShoppingItemDTO, shoppingList: ShoppingList): ShoppingItem{
-        val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, Date(System.currentTimeMillis()), shoppingList)
+        val newSI = ShoppingItem(0, shoppingItem.name, shoppingItem.done, Timestamp(System.currentTimeMillis()), shoppingList)
         var shoppingItems: MutableList<ShoppingItem> = mutableListOf()
         if(shoppingList.shoppingItems != null){
             shoppingItems = shoppingList.shoppingItems as MutableList<ShoppingItem>
         }
         shoppingItems.add(newSI)
         shoppingList.shoppingItems = shoppingItems
-        shoppingList.lastModTime = Date(System.currentTimeMillis())
+        shoppingList.lastModTime = Timestamp(System.currentTimeMillis())
         shoppingListRepository.save(shoppingList)
         return shoppingItemRepository.save(newSI)
     }
@@ -34,7 +33,7 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
             if (lShoppingItems.contains(shoppingItem)) {
                 lShoppingItems.remove(shoppingItem)
                 shoppingList.shoppingItems = lShoppingItems
-                shoppingList.lastModTime = Date(System.currentTimeMillis())
+                shoppingList.lastModTime = Timestamp(System.currentTimeMillis())
                 shoppingListRepository.save(shoppingList)
             }
         }
@@ -43,7 +42,7 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
 
     fun edit(shoppingItem: ShoppingItem, si: ShoppingItem): GetShoppingItemDTO {
         shoppingItem.shoppingList = si.shoppingList
-        shoppingItem.lastModTime = Date(System.currentTimeMillis())
+        shoppingItem.lastModTime = Timestamp(System.currentTimeMillis())
         val sI= shoppingItemRepository.save(shoppingItem)
         val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
         return shoppingItemMapper.convertToDto(sI)
@@ -64,7 +63,7 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
 
     fun undone(si: ShoppingItem): GetShoppingItemDTO{
         si.done = false
-        si.lastModTime = Date(System.currentTimeMillis())
+        si.lastModTime = Timestamp(System.currentTimeMillis())
         val sI= shoppingItemRepository.save(si)
         val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
         return shoppingItemMapper.convertToDto(sI)
@@ -72,7 +71,7 @@ class ShoppingItemService (private val shoppingItemRepository: ShoppingItemRepos
 
     fun done(shoppingItem: ShoppingItem): GetShoppingItemDTO {
         shoppingItem.done = true
-        shoppingItem.lastModTime = Date(System.currentTimeMillis())
+        shoppingItem.lastModTime = Timestamp(System.currentTimeMillis())
         val sI= shoppingItemRepository.save(shoppingItem)
         val shoppingItemMapper = Mappers.getMapper(ShoppingItemMapper::class.java)
         return shoppingItemMapper.convertToDto(sI)

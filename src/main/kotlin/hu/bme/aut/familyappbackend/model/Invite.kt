@@ -1,7 +1,6 @@
 package hu.bme.aut.familyappbackend.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
+import java.sql.Timestamp
 import javax.persistence.*
 
 @Entity
@@ -13,7 +12,7 @@ data class Invite(
     val id: Int,
 
     @Column(name = "lastModTime")
-    var lastModTime: Date? = null,
+    var lastModTime: Timestamp? = null,
 
     @ManyToOne
     @JoinColumn(name = "family")

@@ -2,8 +2,7 @@ package hu.bme.aut.familyappbackend.dto
 
 import lombok.Getter
 import lombok.Setter
-import java.util.*
-import javax.persistence.Column
+import java.sql.Timestamp
 
 @Getter
 @Setter
@@ -16,7 +15,7 @@ data class GetUserDTO(
     val lastname: String? = null,
     val username: String? = null,
     val category: String? = null,
-    val lastModTime: Date? = null,
+    val lastModTime: Timestamp? = null,
     var familyID: Int? = null,
     var inviteID: Int? = null,
     var shoppingListIDs: List<Int>? = null

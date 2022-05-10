@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.util.*
+import java.sql.Timestamp
 
 @Service
 class ShoppingListService (private val shoppingListRepository: ShoppingListRepository, private val userRepository: UserRepository, private val familyRepository: FamilyRepository, private val shoppingItemService: ShoppingItemService, private val userService: UserService){
@@ -23,7 +23,7 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         }
         sUsers.add(user)
         shoppingList.users = sUsers
-        shoppingList.lastModTime = Date(System.currentTimeMillis())
+        shoppingList.lastModTime = Timestamp(System.currentTimeMillis())
         val sl = shoppingListRepository.save(shoppingList)
         var uShoppingLists: MutableList<ShoppingList> = mutableListOf()
         if(user.shoppingLists != null){
@@ -31,7 +31,7 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         }
         uShoppingLists.add(sl)
         user.shoppingLists = uShoppingLists
-        user.lastModTime = Date(System.currentTimeMillis())
+        user.lastModTime = Timestamp(System.currentTimeMillis())
         userRepository.save(user)
         return sl
     }
@@ -43,7 +43,7 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
                 val uLists = user.shoppingLists as MutableList<ShoppingList>
                 if(uLists.contains(shoppingList))
                     uLists.remove(shoppingList)
-                user.lastModTime = Date(System.currentTimeMillis())
+                user.lastModTime = Timestamp(System.currentTimeMillis())
                 userRepository.save(user)
             }
         }
@@ -52,7 +52,7 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
             val fLists = family.shoppingLists as MutableList<ShoppingList>
             if(fLists.contains(shoppingList))
                 fLists.remove(shoppingList)
-            family.lastModTime = Date(System.currentTimeMillis())
+            family.lastModTime = Timestamp(System.currentTimeMillis())
             familyRepository.save(family)
         }
         val slItems = shoppingList.shoppingItems
@@ -78,14 +78,14 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
             return ResponseEntity(HttpStatus.NOT_FOUND)
         users.remove(user)
         shoppingList.users = users
-        shoppingList.lastModTime = Date(System.currentTimeMillis())
+        shoppingList.lastModTime = Timestamp(System.currentTimeMillis())
         shoppingListRepository.save(shoppingList)
         val uShoppingLists: MutableList<ShoppingList> = user.shoppingLists as MutableList<ShoppingList>
         if(!uShoppingLists.contains(shoppingList))
             return ResponseEntity(HttpStatus.NOT_FOUND)
         uShoppingLists.remove(shoppingList)
         user.shoppingLists = uShoppingLists
-        user.lastModTime = Date(System.currentTimeMillis())
+        user.lastModTime = Timestamp(System.currentTimeMillis())
         userRepository.save(user)
         return ResponseEntity(HttpStatus.OK)
     }
@@ -120,7 +120,7 @@ class ShoppingListService (private val shoppingListRepository: ShoppingListRepos
         shoppingList.users = sl.users
         shoppingList.family = sl.family
         shoppingList.shoppingItems = sl.shoppingItems
-        shoppingList.lastModTime = Date(System.currentTimeMillis())
+        shoppingList.lastModTime = Timestamp(System.currentTimeMillis())
         val sL = shoppingListRepository.save(shoppingList)
         val shoppingListMapper = Mappers.getMapper(ShoppingListMapper::class.java)
         return shoppingListMapper.convertToDto(sL)

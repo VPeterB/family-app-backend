@@ -1,10 +1,10 @@
 package hu.bme.aut.familyappbackend.dto
 
-import java.util.*
+import java.sql.Timestamp
 
 data class GetInviteDTO(
     val id: Int,
-    val lastModTime: Date? = null,
+    val lastModTime: Timestamp? = null,
     var familyID: Int? = null,
     var userID: Int? = null
 )

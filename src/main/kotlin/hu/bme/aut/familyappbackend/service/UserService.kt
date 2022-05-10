@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
+import java.sql.Timestamp
 import javax.crypto.SecretKey
 
 @Service
@@ -34,7 +34,7 @@ class UserService(private val userRepository: UserRepository, private val family
         val pw = this.passwordEncoder.encode(user.password)
         val newUser = User(0,user.email, pw)
         newUser.shoppingLists = mutableListOf()
-        newUser.lastModTime = Date(System.currentTimeMillis())
+        newUser.lastModTime = Timestamp(System.currentTimeMillis())
         val us = userRepository.save(newUser)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)
@@ -63,7 +63,7 @@ class UserService(private val userRepository: UserRepository, private val family
             val fUsers = family.users as MutableList<User>
             if(fUsers.contains(user))
                 fUsers.remove(user)
-            family.lastModTime = Date(System.currentTimeMillis())
+            family.lastModTime = Timestamp(System.currentTimeMillis())
             familyRepository.save(family)
         }
         val invite = user.invite
@@ -79,7 +79,7 @@ class UserService(private val userRepository: UserRepository, private val family
                     if(slUsers.contains(user))
                         slUsers.remove(user)
                     sl.users = slUsers
-                    sl.lastModTime = Date(System.currentTimeMillis())
+                    sl.lastModTime = Timestamp(System.currentTimeMillis())
                     shoppingListRepository.save(sl)
                 }
             }
@@ -97,24 +97,24 @@ class UserService(private val userRepository: UserRepository, private val family
             return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN)
         }*/
         if(user.invite != null){
-            user.invite!!.lastModTime = Date(System.currentTimeMillis())
+            user.invite!!.lastModTime = Timestamp(System.currentTimeMillis())
             inviteRepository.delete(user.invite!!)
             if(family.invites != null){
                 val fInvites = family.invites as MutableList<Invite>
                 if(fInvites.contains(user.invite)){
                     fInvites.remove(user.invite)
                     family.invites = fInvites
-                    family.lastModTime = Date(System.currentTimeMillis())
+                    family.lastModTime = Timestamp(System.currentTimeMillis())
                     familyRepository.save(family)
                 }
             }
             user.invite = null
-            user.lastModTime = Date(System.currentTimeMillis())
+            user.lastModTime = Timestamp(System.currentTimeMillis())
         }
-        val newInvite = Invite(0, Date(System.currentTimeMillis()), family, user)
+        val newInvite = Invite(0, Timestamp(System.currentTimeMillis()), family, user)
         val i = inviteRepository.save(newInvite)
         user.invite = i
-        user.lastModTime = Date(System.currentTimeMillis())
+        user.lastModTime = Timestamp(System.currentTimeMillis())
         userRepository.save(user)
         var fInvites = mutableListOf<Invite>()
         if(family.invites != null) {
@@ -122,7 +122,7 @@ class UserService(private val userRepository: UserRepository, private val family
         }
         fInvites.add(i)
         family.invites = fInvites
-        family.lastModTime = Date(System.currentTimeMillis())
+        family.lastModTime = Timestamp(System.currentTimeMillis())
         familyRepository.save(family)
         val inviteMapper = Mappers.getMapper(InviteMapper::class.java)
         return ResponseEntity.ok(inviteMapper.convertToDto(i))
@@ -132,7 +132,7 @@ class UserService(private val userRepository: UserRepository, private val family
         user.family = u.family
         user.invite = u.invite
         user.shoppingLists = u.shoppingLists
-        user.lastModTime = Date(System.currentTimeMillis())
+        user.lastModTime = Timestamp(System.currentTimeMillis())
         val us = userRepository.save(user)
         val userMapper = Mappers.getMapper(UserMapper::class.java)
         return userMapper.convertToDto(us)

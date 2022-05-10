@@ -1,7 +1,7 @@
 package hu.bme.aut.familyappbackend.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
+import java.sql.Timestamp
 import javax.persistence.*
 
 @Entity
@@ -14,7 +14,7 @@ data class Family (
     val id: Int,
 
     @Column(name = "lastModTime")
-    var lastModTime: Date? = null,
+    var lastModTime: Timestamp? = null,
 
     @OneToMany(mappedBy = "family", cascade = [CascadeType.PERSIST])
     var users: List<User>? = null,
