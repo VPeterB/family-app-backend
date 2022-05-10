@@ -58,7 +58,6 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         if (fEvents != null) {
             for(e in fEvents){
                 e.family = null
-                e.lastModTime = Timestamp(System.currentTimeMillis())
                 eventRepository.save(e)
             }
         }

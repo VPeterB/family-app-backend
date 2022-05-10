@@ -23,7 +23,6 @@ class EventService (private val eventRepository: EventRepository, private val us
         }
         eUsers.add(user)
         event.users = eUsers
-        event.lastModTime = Timestamp(System.currentTimeMillis())
         val e = eventRepository.save(event)
         var uEvents: MutableList<Event> = mutableListOf()
         if(user.events != null){
@@ -71,7 +70,6 @@ class EventService (private val eventRepository: EventRepository, private val us
             return ResponseEntity(HttpStatus.NOT_FOUND)
         users.remove(user)
         event.users = users
-        event.lastModTime = Timestamp(System.currentTimeMillis())
         eventRepository.save(event)
         val uEvents: MutableList<Event> = user.events as MutableList<Event>
         if(!uEvents.contains(event))
@@ -113,7 +111,6 @@ class EventService (private val eventRepository: EventRepository, private val us
         val event = Event(eventE.id, eventE.location, eventE.description, eventE.name, eventE.end, eventE.start)
         event.users = e.users
         event.family = e.family
-        event.lastModTime = Timestamp(System.currentTimeMillis())
         val ev = eventRepository.save(event)
         val eventMapper = Mappers.getMapper(EventMapper::class.java)
         return eventMapper.convertToDto(ev)
@@ -121,7 +118,6 @@ class EventService (private val eventRepository: EventRepository, private val us
 
     fun create(eventCreate: GetEventDTO, user: User): ResponseEntity<*>{
         val newEvent = Event(0, eventCreate.location, eventCreate.description, eventCreate.name, eventCreate.end, eventCreate.start)
-        newEvent.lastModTime = Timestamp(System.currentTimeMillis())
         newEvent.users = mutableListOf()
         if(eventCreate.familyID != null){
             val family: Family = familyRepository.findFamilyById(eventCreate.familyID!!)?: return ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND)

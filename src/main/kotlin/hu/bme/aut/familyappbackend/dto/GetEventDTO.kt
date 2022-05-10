@@ -9,7 +9,6 @@ data class GetEventDTO(
     val description: String? = null,
     val end: Timestamp,
     val start: Timestamp,
-    val lastModTime: Timestamp? = null,
     var familyID: Int?,
     var userIDs: List<Int>? = null
 )

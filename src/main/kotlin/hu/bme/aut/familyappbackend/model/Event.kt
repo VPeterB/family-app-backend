@@ -26,9 +26,6 @@ data class Event(
     @Column(name = "startTime")
     var start: Timestamp? = null,
 
-    @Column(name = "lastModTime")
-    var lastModTime: Timestamp? = null,
-
     @ManyToOne
     @JoinColumn(name = "family")
     var family: Family? = null,

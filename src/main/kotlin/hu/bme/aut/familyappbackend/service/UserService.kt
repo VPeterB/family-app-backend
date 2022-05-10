@@ -88,7 +88,6 @@ class UserService(private val userRepository: UserRepository, private val family
                     if(eUsers.contains(user))
                         eUsers.remove(user)
                     e.users = eUsers
-                    e.lastModTime = Timestamp(System.currentTimeMillis())
                     eventRepository.save(e)
                 }
             }
