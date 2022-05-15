@@ -140,6 +140,7 @@ class UserService(private val userRepository: UserRepository, private val family
         user.family = u.family
         user.invite = u.invite
         user.shoppingLists = u.shoppingLists
+        user.events = u.events
         user.lastModTime = Timestamp(System.currentTimeMillis())
         val us = userRepository.save(user)
         val userMapper = Mappers.getMapper(UserMapper::class.java)

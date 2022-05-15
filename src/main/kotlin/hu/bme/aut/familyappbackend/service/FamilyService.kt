@@ -102,6 +102,7 @@ class FamilyService (private val familyRepository: FamilyRepository, private val
         family.users = f.users
         family.invites = f.invites
         family.shoppingLists = f.shoppingLists
+        family.events = f.events
         family.lastModTime = Timestamp(System.currentTimeMillis())
         val fam = familyRepository.save(family)
         val familyMapper = Mappers.getMapper(FamilyMapper::class.java)
